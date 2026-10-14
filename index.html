@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0284c7">
+  <meta name="description" content="Personal Finance Manager — Smart Offline Edition. Secure, private, 100% offline financial tracking in Bengali & English.">
+  <title>পার্সোনাল ফাইন্যান্স ম্যানেজার — স্মার্ট অফলাইন সংস্করণ</title>
+  
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Finance Manager">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/mobile.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-badge">
+          <div class="brand-icon">৳</div>
+          <div>
+            <div class="brand-title" data-i18n="appName">পার্সোনাল ফাইন্যান্স</div>
+            <div style="font-size: 0.75rem; color: var(--primary);" data-i18n="appSubtitle">স্মার্ট অফলাইন</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- Phase 1 Core Links -->
+        <a href="#dashboard" class="nav-link active">
+          <span>📊</span>
+          <span data-i18n="navDashboard">ড্যাশবোর্ড</span>
+        </a>
+        <a href="#income" class="nav-link">
+          <span>💰</span>
+          <span data-i18n="navIncome">আয় যুক্ত করুন</span>
+        </a>
+        <a href="#expenses" class="nav-link">
+          <span>🛒</span>
+          <span data-i18n="navExpenses">ব্যয় যুক্ত করুন</span>
+        </a>
+        <a href="#transactions" class="nav-link">
+          <span>📑</span>
+          <span data-i18n="navTransactions">লেনদেন খতিয়ান</span>
+        </a>
+
+        <a href="#budgets" class="nav-link">
+          <span>🎯</span>
+          <span data-i18n="navBudgets">বাজেট ব্যবস্থাপনা</span>
+        </a>
+        <a href="#savings" class="nav-link">
+          <span>🌱</span>
+          <span data-i18n="navSavings">সঞ্চয় লক্ষ্য</span>
+        </a>
+        <a href="#lending" class="nav-link">
+          <span>🤝</span>
+          <span data-i18n="navLending">ধার প্রদান</span>
+        </a>
+        <a href="#borrowing" class="nav-link">
+          <span>💳</span>
+          <span data-i18n="navBorrowing">ঋণ গ্রহণ</span>
+        </a>
+        <a href="#accounts" class="nav-link">
+          <span>🏦</span>
+          <span data-i18n="navAccounts">হিসাব ও নগদ</span>
+        </a>
+
+        <a href="#reports" class="nav-link">
+          <span>📈</span>
+          <span data-i18n="navReports">রিপোর্ট ও চার্ট</span>
+        </a>
+
+        <a href="#assistant" class="nav-link">
+          <span>🤖</span>
+          <span data-i18n="navAssistant">এআই ফাইন্যান্স সহকারী</span>
+        </a>
+
+        <a href="#backup" class="nav-link">
+          <span>💾</span>
+          <span data-i18n="navBackup">ব্যাকআপ ও রিস্টোর</span>
+        </a>
+        <a href="#settings" class="nav-link">
+          <span>⚙️</span>
+          <span data-i18n="settingsTitle">সেটিংস ও নিরাপত্তা</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="offline-pill">
+          <span>⚡</span>
+          <span data-i18n="offlineBadge">১০০% অফলাইন</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="app-main">
+      <!-- Top Sticky Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button type="button" class="mobile-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation">☰</button>
+          <div class="brand-title" data-i18n="appName">পার্সোনাল ফাইন্যান্স ম্যানেজার</div>
+        </div>
+        
+        <div class="header-right">
+          <!-- PWA Install Button (Shown dynamically via beforeinstallprompt) -->
+          <button type="button" id="btn-pwa-install" class="btn btn-primary btn-sm" style="display: none; align-items: center; gap: 6px;" aria-label="Install App">
+            <span>📲</span> <span data-i18n="btnInstallApp">ইনস্টল করুন</span>
+          </button>
+
+          <!-- MIS Security Status Badge (Clickable to setup) -->
+          <span id="mis-status-badge" class="status-badge badge-inactive" title="MIS পাসওয়ার্ড কনফিগার করতে ক্লিক করুন">
+            ⚠️ MIS পাসওয়ার্ড সেট করা নেই
+          </span>
+
+          <!-- Language Switcher Button -->
+          <button type="button" id="btn-lang-toggle" class="btn btn-secondary btn-sm" aria-label="Switch Language">
+            English
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic View Container -->
+      <main id="view-container" class="view-container">
+        <!-- Rendered by Router -->
+      </main>
+    </div>
+  </div>
+
+  <!-- GLOBAL MIS MODULE PASSWORD VERIFICATION MODAL (Rule 5 & Section 17) -->
+  <div id="mis-verify-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--danger);">🔒 <span data-i18n="misModalTitle">MIS মডিউল নিরাপত্তা গেট</span></h3>
+      </div>
+      <div class="modal-body">
+        <p id="mis-verify-desc" class="modal-notice" style="margin-bottom: 16px;"></p>
+        
+        <div class="form-group">
+          <label for="mis-verify-password-input" class="form-label required" data-i18n="misPasswordLabel">MIS পাসওয়ার্ড প্রদান করুন</label>
+          <input type="password" id="mis-verify-password-input" class="form-input" placeholder="••••••••" autocomplete="current-password">
+        </div>
+
+        <div id="mis-verify-error" class="alert alert-danger hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="mis-btn-cancel-delete" data-i18n="btnCancel">বাতিল</button>
+        <button type="button" class="btn btn-danger" id="mis-btn-confirm-delete" data-i18n="misBtnVerifyDelete">পাসওয়ার্ড যাচাই করে মুছে ফেলুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL MIS MODULE SETUP MODAL -->
+  <div id="mis-setup-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">🛡️ <span data-i18n="misSetupTitle">MIS মডিউল পাসওয়ার্ড সেটআপ</span></h3>
+        <button type="button" class="btn-close" id="mis-setup-close">&times;</button>
+      </div>
+      <form id="mis-setup-form">
+        <div class="modal-body">
+          <p class="modal-notice" style="margin-bottom: 16px;" data-i18n="misSetupNotice">
+            যে কোনো আর্থিক তথ্য মোছার জন্য MIS পাসওয়ার্ড আবশ্যক। একটি নিরাপদ পাসওয়ার্ড নির্ধারণ করুন।
+          </p>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label for="mis-setup-new-password" class="form-label required" data-i18n="misPasswordNew">নতুন MIS পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
+            <input type="password" id="mis-setup-new-password" class="form-input" placeholder="••••••••" minlength="6" required autocomplete="new-password">
+          </div>
+
+          <div class="form-group">
+            <label for="mis-setup-confirm-password" class="form-label required" data-i18n="misPasswordConfirm">পাসওয়ার্ড নিশ্চিত করুন</label>
+            <input type="password" id="mis-setup-confirm-password" class="form-input" placeholder="••••••••" minlength="6" required autocomplete="new-password">
+          </div>
+
+          <div id="mis-setup-error" class="alert alert-danger hidden"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="mis-setup-cancel" data-i18n="btnCancel">বাতিল</button>
+          <button type="submit" class="btn btn-primary" id="mis-setup-save" data-i18n="misBtnSetup">MIS পাসওয়ার্ড সংরক্ষণ করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FILE PROTOCOL WARNING (CORS Detection) -->
+  <div id="file-protocol-warning" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border: 2px solid #f59e0b; color: #92400e; padding: 28px; max-width: 580px; border-radius: 14px; font-family: system-ui, sans-serif; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.25);">
+      <div style="font-size: 2.5rem; margin-bottom: 8px;">⚠️</div>
+      <h3 style="margin-top: 0; font-size: 1.3rem; color: #b45309;">ব্রাউজার নিরাপত্তা নির্দেশনা (file:// Protocol)</h3>
+      <p style="margin: 12px 0; font-size: 0.95rem; line-height: 1.6; color: #475569;">
+        আধুনিক ব্রাউজারসমূহ নিরাপত্তার কারণে সরাসরি <code>file://</code> দিয়ে জাভাস্ক্রিপ্ট মডিউল লোড ব্লক করে।
+      </p>
+      <div style="background: #eff6ff; padding: 14px 18px; border-radius: 8px; border: 1px solid #bfdbfe; margin: 16px 0;">
+        <p style="margin: 0; font-weight: 700; font-size: 1.1rem; color: #1e40af;">
+          👉 ফোল্ডারে থাকা <span style="background: #dbeafe; padding: 2px 8px; border-radius: 4px;">start.bat</span> ফাইলে ডাবল-ক্লিক করুন!
+        </p>
+        <p style="margin: 6px 0 0; font-size: 0.85rem; color: #64748b;">
+          (Double-click <strong>start.bat</strong> in this folder to launch the local offline server)
+        </p>
+      </div>
+    </div>
+  </div>
+  <script>
+    if (window.location.protocol === 'file:') {
+      var w = document.getElementById('file-protocol-warning');
+      if (w) w.style.display = 'flex';
+    }
+  </script>
+
+  <!-- Main ES Module Script -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

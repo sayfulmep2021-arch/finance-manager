@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 1 Test Suite — Personal Finance Manager</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      padding: 30px;
+      background-color: #f1f5f9;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    .test-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+    }
+    .test-item:last-child {
+      border-bottom: none;
+    }
+    .test-pass {
+      background-color: #f0fdf4;
+    }
+    .test-fail {
+      background-color: #fef2f2;
+    }
+    .error-msg {
+      color: #dc2626;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+    .alert-income {
+      background-color: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <header style="margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 14px;">
+      <h1 style="font-size: 1.5rem; color: #0284c7;">🧪 Phase 1 Automated Verification Suite</h1>
+      <p style="color: #64748b; font-size: 0.9rem;">Personal Finance Manager — Smart Offline Edition</p>
+    </header>
+
+    <div id="test-summary" class="alert" style="margin-bottom: 20px;">
+      Running tests...
+    </div>
+
+    <div id="test-results">
+      <!-- Test results loaded dynamically -->
+    </div>
+  </div>
+
+  <script>
+    window.onerror = function(msg, url, line, col, err) {
+      var d = document.createElement('div');
+      d.style.color = 'red';
+      d.style.padding = '10px';
+      d.textContent = 'GLOBAL ERROR: ' + msg + ' (line ' + line + ') ' + (err ? err.stack : '');
+      document.getElementById('test-results').appendChild(d);
+    };
+    window.onunhandledrejection = function(e) {
+      var d = document.createElement('div');
+      d.style.color = 'red';
+      d.style.padding = '10px';
+      d.textContent = 'UNHANDLED PROMISE REJECTION: ' + (e.reason ? (e.reason.stack || e.reason) : e);
+      document.getElementById('test-results').appendChild(d);
+    };
+  </script>
+  <script type="module" src="./test_runner.js"></script>
+</body>
+</html>
