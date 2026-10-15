@@ -89,7 +89,8 @@ export async function navigateTo(route) {
 
   // Update mobile active bottom navigation links
   document.querySelectorAll('.bnav-item').forEach(link => {
-    if (link.getAttribute('data-bnav') === currentRoute) {
+    const bnavRoute = link.getAttribute('data-bnav');
+    if (bnavRoute === currentRoute || (bnavRoute === 'borrowing' && (currentRoute === 'lending' || currentRoute === 'borrowing'))) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');

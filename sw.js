@@ -1,6 +1,6 @@
 // Service Worker for Personal Finance Manager - Smart Offline Edition
-// Version: pfm-offline-v10 (Automatic cache busting and network-first navigation)
-const CACHE_NAME = 'pfm-offline-v10';
+// Version: pfm-offline-v11 (Full-screen native mobile UI with English bottom navigation)
+const CACHE_NAME = 'pfm-offline-v11';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

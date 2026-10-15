@@ -37,19 +37,20 @@
 }
 
 /* ==========================================================================
-   2. MOBILE & TOUCH DEVICE SHELL OVERRIDES
-   Guarantees mobile view triggers even on high-DPI or "Desktop Site" mode
+   2. MOBILE & TOUCH DEVICE MEDIA QUERY (Screens <= 1024px or Touch Devices)
    ========================================================================== */
-html.is-mobile-device .app-container,
 @media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  /* App Shell & Full-Screen Mobile Layout */
   .app-container {
     display: block !important;
     width: 100% !important;
     max-width: 100vw !important;
     min-height: 100vh !important;
     overflow-x: hidden !important;
+    background-color: #f8fafc !important;
   }
 
+  /* Desktop sidebar hidden off-screen; never occupies document flow */
   .app-sidebar {
     position: fixed !important;
     left: 0 !important;
@@ -58,7 +59,7 @@ html.is-mobile-device .app-container,
     width: 280px !important;
     height: 100vh !important;
     transform: translateX(-100%) !important;
-    box-shadow: var(--shadow-lg) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
     z-index: 1000 !important;
     transition: transform 0.25s ease !important;
     display: flex !important;
@@ -76,12 +77,11 @@ html.is-mobile-device .app-container,
     overflow-x: hidden !important;
   }
 
-  /* In mobile mode, hide desktop header; mobile greeting header takes over */
+  /* Hide Desktop Headers & Panels */
   .app-header {
     display: none !important;
   }
 
-  /* Hide Desktop Elements on Mobile */
   .view-header,
   .desktop-kpi-grid,
   .desktop-only-grid,
@@ -89,7 +89,7 @@ html.is-mobile-device .app-container,
     display: none !important;
   }
 
-  /* Ensure Mobile Components are Displayed */
+  /* Ensure Mobile Components Display with full width */
   .mobile-app-header {
     display: flex !important;
   }
@@ -122,12 +122,14 @@ html.is-mobile-device .app-container,
     display: flex !important;
   }
 
-  /* Main Viewport Container with Bottom Nav clearance */
+  /* View container with safe padding above bottom navigation */
   .view-container {
-    padding: 10px 16px 110px 16px !important;
+    padding: 12px 16px 115px 16px !important;
     max-width: 100vw !important;
+    width: 100% !important;
     overflow-x: hidden !important;
     background-color: #f8fafc !important;
+    box-sizing: border-box !important;
   }
 
   /* ==========================================================================
@@ -136,7 +138,7 @@ html.is-mobile-device .app-container,
   .mobile-app-header {
     justify-content: space-between;
     align-items: center;
-    padding: 12px 2px 16px 2px;
+    padding: 10px 2px 16px 2px;
     background: transparent;
   }
 
@@ -153,15 +155,12 @@ html.is-mobile-device .app-container,
   }
 
   .mobile-greeting-name {
-    font-size: 1.5rem;
+    font-size: 1.55rem;
     font-weight: 800;
     color: #0f172a;
     line-height: 1.2;
     margin-top: 2px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
   }
 
   .mobile-header-right {
@@ -183,7 +182,6 @@ html.is-mobile-device .app-container,
     color: #0f172a;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    position: relative;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -243,7 +241,7 @@ html.is-mobile-device .app-container,
   }
 
   /* ==========================================================================
-     4. MAIN WALLET SUMMARY CARD (Fintech Light Gradient & Real Progress Ring)
+     4. MAIN WALLET SUMMARY CARD (Fintech Light Theme, Large Balance, SVG Ring)
      ========================================================================== */
   .mobile-wallet-card {
     background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
@@ -251,8 +249,9 @@ html.is-mobile-device .app-container,
     border-radius: 24px;
     padding: 20px;
     margin-bottom: 18px;
-    box-shadow: 0 4px 18px rgba(2, 132, 199, 0.05);
+    box-shadow: 0 4px 18px rgba(2, 132, 199, 0.06);
     position: relative;
+    box-sizing: border-box;
   }
 
   .wallet-header {
@@ -296,7 +295,7 @@ html.is-mobile-device .app-container,
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 3px 9px;
+    padding: 4px 10px;
     border-radius: 18px;
     font-size: 0.82rem;
     font-weight: 700;
@@ -338,28 +337,31 @@ html.is-mobile-device .app-container,
     font-weight: 800;
   }
 
-  /* Circular Progress Ring matching the image */
+  /* Circular Progress Ring matching reference image */
   .wallet-circular-ring {
     width: 82px;
     height: 82px;
+    min-width: 82px;
+    max-width: 82px;
     position: relative;
     flex-shrink: 0;
   }
 
   .wallet-circular-ring svg {
     transform: rotate(-90deg);
-    width: 100%;
-    height: 100%;
+    width: 82px;
+    height: 82px;
+    display: block;
   }
 
   .ring-bg {
-    fill: none;
+    fill: none !important;
     stroke: #e0f2fe;
     stroke-width: 6;
   }
 
   .ring-fg {
-    fill: none;
+    fill: none !important;
     stroke: #0284c7;
     stroke-width: 6;
     stroke-linecap: round;
@@ -401,6 +403,7 @@ html.is-mobile-device .app-container,
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-bottom: 18px;
+    box-sizing: border-box;
   }
 
   .mobile-account-card {
@@ -416,6 +419,7 @@ html.is-mobile-device .app-container,
     transition: transform 0.15s, box-shadow 0.15s;
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
   }
 
   .mobile-account-card:active {
@@ -423,8 +427,8 @@ html.is-mobile-device .app-container,
   }
 
   .account-card-icon {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -453,7 +457,7 @@ html.is-mobile-device .app-container,
   }
 
   .account-card-name {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: #64748b;
     display: block;
@@ -463,7 +467,7 @@ html.is-mobile-device .app-container,
   }
 
   .account-card-val {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 800;
     color: #0f172a;
     display: block;
@@ -472,7 +476,7 @@ html.is-mobile-device .app-container,
   }
 
   /* ==========================================================================
-     6. SEGMENTED TOGGLE TABS (Matching 'আয়' & 'ব্যয়')
+     6. SEGMENTED TOGGLE TABS (Full-Width Pill)
      ========================================================================== */
   .mobile-toggle-wrapper {
     background: #f1f5f9;
@@ -480,6 +484,7 @@ html.is-mobile-device .app-container,
     padding: 4px;
     gap: 4px;
     margin-bottom: 20px;
+    box-sizing: border-box;
   }
 
   .toggle-tab-btn {
@@ -512,7 +517,7 @@ html.is-mobile-device .app-container,
   }
 
   /* ==========================================================================
-     7. RECENT TRANSACTIONS HEADER & LIST (Matching Cards in Image)
+     7. RECENT TRANSACTIONS HEADER & LIST (Individual Floating Cards)
      ========================================================================== */
   .mobile-section-header {
     justify-content: space-between;
@@ -538,6 +543,7 @@ html.is-mobile-device .app-container,
   .mobile-tx-list-container {
     flex-direction: column;
     gap: 10px;
+    box-sizing: border-box;
   }
 
   .mobile-tx-item {
@@ -545,13 +551,14 @@ html.is-mobile-device .app-container,
     border: 1px solid #f1f5f9;
     border-radius: 18px;
     padding: 14px 16px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
     transition: background-color 0.15s;
     -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
   }
 
   .mobile-tx-item:active {
@@ -598,14 +605,14 @@ html.is-mobile-device .app-container,
   }
 
   .mobile-tx-amount {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 800;
     color: #0f172a;
     white-space: nowrap;
   }
 
   /* ==========================================================================
-     8. FLOATING ACTION BUTTON (FAB) & BOTTOM NAVIGATION
+     8. FLOATING ACTION BUTTON (FAB) & FIXED BOTTOM NAVIGATION
      ========================================================================== */
   .mobile-fab {
     position: fixed !important;
@@ -647,6 +654,7 @@ html.is-mobile-device .app-container,
     z-index: 985 !important;
     box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04) !important;
     padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    box-sizing: border-box !important;
   }
 
   .bnav-item {
@@ -670,7 +678,7 @@ html.is-mobile-device .app-container,
   }
 
   .bnav-item.active .bnav-icon {
-    transform: scale(1.08) !important;
+    transform: scale(1.1) !important;
   }
 
   .bnav-icon {
@@ -678,6 +686,12 @@ html.is-mobile-device .app-container,
     line-height: 1 !important;
     margin-bottom: 2px !important;
     transition: transform 0.15s ease !important;
+  }
+
+  .bnav-label {
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
   }
 
   /* ==========================================================================
@@ -692,6 +706,7 @@ html.is-mobile-device .app-container,
     padding: 16px 18px 28px;
     box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.15);
     animation: slideUp 0.25s ease-out;
+    box-sizing: border-box;
   }
 
   @keyframes slideUp {
@@ -726,6 +741,7 @@ html.is-mobile-device .app-container,
     text-align: left;
     transition: background-color 0.15s;
     -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
   }
 
   .quick-action-btn:active {
@@ -769,6 +785,7 @@ html.is-mobile-device .app-container,
     display: flex;
     align-items: center;
     justify-content: space-between;
+    box-sizing: border-box;
   }
 
   .notif-card-left {
@@ -803,6 +820,7 @@ html.is-mobile-device .app-container,
     border-radius: 16px;
     padding: 14px;
     margin-bottom: 16px;
+    box-sizing: border-box;
   }
 
   .profile-name-text {
@@ -842,6 +860,7 @@ html.is-mobile-device .app-container,
     cursor: pointer;
     transition: background 0.15s;
     -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
   }
 
   .profile-menu-item:active {
@@ -893,3 +912,49 @@ html.is-mobile-device .app-container,
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* ==========================================================================
+   10. FALLBACK CLASS SUPPORT: html.is-mobile-device
+   Ensures 100% mobile shell activation even if media query edge cases occur
+   ========================================================================== */
+html.is-mobile-device .app-container {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
+}
+
+html.is-mobile-device .app-sidebar {
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 280px !important;
+  height: 100vh !important;
+  transform: translateX(-100%) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  z-index: 1000 !important;
+  display: flex !important;
+}
+
+html.is-mobile-device .app-sidebar.open {
+  transform: translateX(0) !important;
+}
+
+html.is-mobile-device .app-header,
+html.is-mobile-device .view-header,
+html.is-mobile-device .desktop-kpi-grid,
+html.is-mobile-device .desktop-only-grid,
+html.is-mobile-device .desktop-only-table {
+  display: none !important;
+}
+
+html.is-mobile-device .mobile-app-header { display: flex !important; }
+html.is-mobile-device .mobile-wallet-card { display: block !important; }
+html.is-mobile-device .mobile-accounts-grid { display: grid !important; }
+html.is-mobile-device .mobile-toggle-wrapper { display: flex !important; }
+html.is-mobile-device .mobile-section-header { display: flex !important; }
+html.is-mobile-device .mobile-tx-list-container { display: flex !important; }
+html.is-mobile-device .mobile-fab { display: flex !important; }
+html.is-mobile-device .mobile-bottom-nav { display: flex !important; }

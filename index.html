@@ -33,8 +33,8 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Finance Manager">
-  <link rel="stylesheet" href="./css/style.css?v=10">
-  <link rel="stylesheet" href="./css/mobile.css?v=10">
+  <link rel="stylesheet" href="./css/style.css?v=11">
+  <link rel="stylesheet" href="./css/mobile.css?v=11">
 </head>
 <body>
   <div class="app-container">
@@ -161,27 +161,27 @@
         <button type="button" id="btn-apply-update" class="btn-update-pill">আপডেট করুন</button>
       </div>
 
-      <!-- Mobile Fixed Bottom Navigation (Rule: Only displays on mobile) -->
+      <!-- Mobile Fixed Bottom Navigation (English Labels per User Specification) -->
       <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
         <a href="#dashboard" class="bnav-item active" data-bnav="dashboard">
           <span class="bnav-icon">🏠</span>
-          <span class="bnav-label" data-i18n="bnavHome">হোম</span>
+          <span class="bnav-label">Home</span>
         </a>
-        <a href="#accounts" class="bnav-item" data-bnav="accounts">
-          <span class="bnav-icon">💳</span>
-          <span class="bnav-label" data-i18n="bnavAccounts">হিসাব</span>
-        </a>
-        <a href="#borrowing" class="bnav-item" data-bnav="borrowing">
-          <span class="bnav-icon">👥</span>
-          <span class="bnav-label" data-i18n="bnavLoans">ঋণ</span>
+        <a href="#transactions" class="bnav-item" data-bnav="transactions">
+          <span class="bnav-icon">📑</span>
+          <span class="bnav-label">History</span>
         </a>
         <a href="#savings" class="bnav-item" data-bnav="savings">
           <span class="bnav-icon">🎯</span>
-          <span class="bnav-label" data-i18n="bnavSavings">সঞ্চয়</span>
+          <span class="bnav-label">Savings</span>
+        </a>
+        <a href="#borrowing" class="bnav-item" data-bnav="borrowing">
+          <span class="bnav-icon">👥</span>
+          <span class="bnav-label">Loans</span>
         </a>
         <a href="#reports" class="bnav-item" data-bnav="reports">
           <span class="bnav-icon">📊</span>
-          <span class="bnav-label" data-i18n="bnavReports">পরিসংখ্যান</span>
+          <span class="bnav-label">Statistics</span>
         </a>
       </nav>
     </div>
@@ -392,6 +392,6 @@
   </script>
 
   <!-- Main ES Module Script -->
-  <script type="module" src="./js/app.js?v=10"></script>
+  <script type="module" src="./js/app.js?v=11"></script>
 </body>
 </html>
