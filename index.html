@@ -24,6 +24,16 @@
       detectMobile();
       window.addEventListener('resize', detectMobile);
       document.addEventListener('DOMContentLoaded', detectMobile);
+
+      // Lock Viewport globally to prevent double-tap zoom & multi-touch pinch zoom
+      document.addEventListener('gesturestart', function(e) { e.preventDefault(); }, { passive: false });
+      document.addEventListener('gesturechange', function(e) { e.preventDefault(); }, { passive: false });
+      document.addEventListener('gestureend', function(e) { e.preventDefault(); }, { passive: false });
+      window.addEventListener('touchstart', function(e) {
+        if (e.touches && e.touches.length > 1) {
+          e.preventDefault();
+        }
+      }, { passive: false });
     })();
   </script>
 
@@ -33,8 +43,8 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Finance Manager">
-  <link rel="stylesheet" href="./css/style.css?v=12">
-  <link rel="stylesheet" href="./css/mobile.css?v=12">
+  <link rel="stylesheet" href="./css/style.css?v=13">
+  <link rel="stylesheet" href="./css/mobile.css?v=13">
 </head>
 <body>
   <div class="app-container">
@@ -392,6 +402,6 @@
   </script>
 
   <!-- Main ES Module Script -->
-  <script type="module" src="./js/app.js?v=12"></script>
+  <script type="module" src="./js/app.js?v=13"></script>
 </body>
 </html>

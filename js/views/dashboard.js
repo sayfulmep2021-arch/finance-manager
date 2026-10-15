@@ -173,9 +173,43 @@ export async function renderDashboard(container) {
       </a>
     </div>
 
-    <!-- MOBILE RECENT TRANSACTIONS LIST (Individual Floating Cards) -->
+    <!-- MOBILE RECENT TRANSACTIONS LIST (Unified Card matching Reference) -->
     <div class="mobile-tx-list-container" id="mobile-tx-list-container">
-      <!-- Populated dynamically -->
+      <!-- Populated dynamically as unified card -->
+    </div>
+
+    <!-- SMART FINANCIAL HEALTH BANNER (Matching Reference Image Banner) -->
+    <div class="mobile-insights-banner" onclick="window.location.hash='#budgets'">
+      <div class="insights-icon-circle">🎯</div>
+      <div class="insights-content">
+        <h4 class="insights-title">মাসিক বাজেট স্বাস্থ্য: নিরাপদ (Safe Zone)</h4>
+        <p class="insights-desc">চলতি মাসে আপনার ব্যয়ের গতি স্বাভাবিক রয়েছে। সঞ্চয় লক্ষ্যমাত্রা অর্জনে এগিয়ে থাকুন।</p>
+      </div>
+    </div>
+
+    <!-- TOP FEATURES & QUICK SERVICES (Matching Reference Image Top Features Grid) -->
+    <div class="mobile-section-header" style="margin-top: 4px;">
+      <h3 class="mobile-section-title">⚡ প্রয়োজনীয় টুলস (Top Features)</h3>
+      <a href="#settings" class="mobile-view-all-link">সব সেটিংস</a>
+    </div>
+
+    <div class="mobile-tools-grid">
+      <a href="#reports" class="mobile-tool-item">
+        <div class="mobile-tool-icon">📊</div>
+        <span class="mobile-tool-label">রিপোর্ট</span>
+      </a>
+      <a href="#budgets" class="mobile-tool-item">
+        <div class="mobile-tool-icon">🎯</div>
+        <span class="mobile-tool-label">বাজেট</span>
+      </a>
+      <a href="#borrowing" class="mobile-tool-item">
+        <div class="mobile-tool-icon">👥</div>
+        <span class="mobile-tool-label">ধার-দেনা</span>
+      </a>
+      <a href="#assistant" class="mobile-tool-item">
+        <div class="mobile-tool-icon">🤖</div>
+        <span class="mobile-tool-label">সহকারী</span>
+      </a>
     </div>
 
     <!-- DESKTOP KPI GRID (Retained 100% for screens > 768px) -->
@@ -455,23 +489,17 @@ function renderRecentTransactionsView() {
     return true;
   });
 
-  // 1. Render Mobile Card List matching the Screenshot
+  // 1. Render Mobile Unified Card matching the Reference Screenshot
   if (mobContainer) {
+    let rowsHtml = '';
+    const isExpense = activeMobileTab === 'expense';
+    const targetHash = isExpense ? '#expenses' : '#income';
+    const addLabel = isExpense ? '➕ নতুন ব্যয় যোগ করুন' : '➕ নতুন আয় যোগ করুন';
+
     if (filteredTx.length === 0) {
-      if (activeMobileTab === 'expense') {
-        mobContainer.innerHTML = `
-          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 16px; margin-bottom: 8px; text-align: center;">
-            <p style="margin: 0 0 10px 0; font-size: 0.88rem; color: #64748b; font-weight: 600;">
-              এখনো কোনো ব্যয়ের রেকর্ড যুক্ত করা হয়নি
-            </p>
-            <button type="button" class="btn btn-primary btn-sm" onclick="window.location.hash='#expenses'" style="margin: 0 auto; display: inline-flex; align-items: center; gap: 6px;">
-              <span>➕</span> <span>নতুন ব্যয় যোগ করুন</span>
-            </button>
-          </div>
-          <div style="font-size: 0.76rem; color: #94a3b8; font-weight: 600; padding: 2px 4px 6px;">
-            নমুনা লেআউট প্রিভিউ (Demo Preview):
-          </div>
-          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#expenses'">
+      if (isExpense) {
+        rowsHtml = `
+          <div class="mobile-unified-row" onclick="window.location.hash='#expenses'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #fff7ed; color: #ea580c; border: 1px solid #ffedd5;">☕</div>
               <div class="mobile-tx-details">
@@ -481,7 +509,7 @@ function renderRecentTransactionsView() {
             </div>
             <div class="mobile-tx-amount">৳১৬০</div>
           </div>
-          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#expenses'">
+          <div class="mobile-unified-row" onclick="window.location.hash='#expenses'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #f5f3ff; color: #7c3aed; border: 1px solid #ede9fe;">🐟</div>
               <div class="mobile-tx-details">
@@ -491,7 +519,7 @@ function renderRecentTransactionsView() {
             </div>
             <div class="mobile-tx-amount">৳১,৫০০</div>
           </div>
-          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#expenses'">
+          <div class="mobile-unified-row" onclick="window.location.hash='#expenses'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #fdf2f8; color: #db2777; border: 1px solid #fce7f3;">🧴</div>
               <div class="mobile-tx-details">
@@ -501,7 +529,7 @@ function renderRecentTransactionsView() {
             </div>
             <div class="mobile-tx-amount">৳৪০</div>
           </div>
-          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#expenses'">
+          <div class="mobile-unified-row" onclick="window.location.hash='#expenses'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fee2e2;">📷</div>
               <div class="mobile-tx-details">
@@ -513,19 +541,8 @@ function renderRecentTransactionsView() {
           </div>
         `;
       } else {
-        mobContainer.innerHTML = `
-          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 16px; margin-bottom: 8px; text-align: center;">
-            <p style="margin: 0 0 10px 0; font-size: 0.88rem; color: #64748b; font-weight: 600;">
-              এখনো কোনো আয়ের রেকর্ড যুক্ত করা হয়নি
-            </p>
-            <button type="button" class="btn btn-primary btn-sm" onclick="window.location.hash='#income'" style="margin: 0 auto; display: inline-flex; align-items: center; gap: 6px;">
-              <span>➕</span> <span>নতুন আয় যোগ করুন</span>
-            </button>
-          </div>
-          <div style="font-size: 0.76rem; color: #94a3b8; font-weight: 600; padding: 2px 4px 6px;">
-            নমুনা লেআউট প্রিভিউ (Demo Preview):
-          </div>
-          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#income'">
+        rowsHtml = `
+          <div class="mobile-unified-row" onclick="window.location.hash='#income'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7;">💰</div>
               <div class="mobile-tx-details">
@@ -535,7 +552,7 @@ function renderRecentTransactionsView() {
             </div>
             <div class="mobile-tx-amount text-success">+৳৭০,০০০</div>
           </div>
-          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#income'">
+          <div class="mobile-unified-row" onclick="window.location.hash='#income'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #eff6ff; color: #0284c7; border: 1px solid #dbeafe;">💻</div>
               <div class="mobile-tx-details">
@@ -548,8 +565,7 @@ function renderRecentTransactionsView() {
         `;
       }
     } else {
-      let mobHtml = '';
-      filteredTx.slice(0, 10).forEach(tx => {
+      filteredTx.slice(0, 6).forEach(tx => {
         const cat = cachedCatMap[tx.categoryId];
         const style = getCategoryBadgeStyle(tx.categoryId);
         const catIcon = cat?.icon || style.defaultIcon;
@@ -557,8 +573,8 @@ function renderRecentTransactionsView() {
         const isIncome = tx.type === 'income';
         const relDate = formatRelativeDate(tx.date);
 
-        mobHtml += `
-          <div class="mobile-tx-item" onclick="window.location.hash='#transactions'">
+        rowsHtml += `
+          <div class="mobile-unified-row" onclick="window.location.hash='#transactions'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: ${style.bg}; color: ${style.text}; border: 1px solid ${style.border};">
                 ${catIcon}
@@ -568,14 +584,29 @@ function renderRecentTransactionsView() {
                 <span class="mobile-tx-sub">${relDate}</span>
               </div>
             </div>
-            <div class="mobile-tx-amount">
-              ${formatMoney(tx.amountPaisa)}
+            <div class="mobile-tx-amount ${isIncome ? 'text-success' : ''}">
+              ${isIncome ? '+' : ''}${formatMoney(tx.amountPaisa)}
             </div>
           </div>
         `;
       });
-      mobContainer.innerHTML = mobHtml;
     }
+
+    mobContainer.innerHTML = `
+      <div class="mobile-unified-card">
+        <div class="mobile-unified-list">
+          ${rowsHtml}
+        </div>
+        <div class="mobile-unified-card-footer">
+          <button type="button" class="mobile-card-footer-btn" onclick="window.location.hash='${targetHash}'">
+            <span>${addLabel}</span>
+          </button>
+          <button type="button" class="mobile-card-footer-btn" onclick="window.location.hash='#transactions'">
+            <span>📑 সব লেনদেন দেখুন</span>
+          </button>
+        </div>
+      </div>
+    `;
   }
 
   // 2. Render Desktop Table View (Screens > 768px)

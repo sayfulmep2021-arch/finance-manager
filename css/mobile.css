@@ -13,6 +13,9 @@
   html:not(.is-mobile-device) .mobile-toggle-wrapper,
   html:not(.is-mobile-device) .mobile-section-header,
   html:not(.is-mobile-device) .mobile-tx-list-container,
+  html:not(.is-mobile-device) .mobile-unified-card,
+  html:not(.is-mobile-device) .mobile-insights-banner,
+  html:not(.is-mobile-device) .mobile-tools-grid,
   html:not(.is-mobile-device) .mobile-fab,
   html:not(.is-mobile-device) .mobile-bottom-nav,
   html:not(.is-mobile-device) #mobile-quick-add-modal,
@@ -40,6 +43,27 @@
    2. MOBILE & TOUCH DEVICE MEDIA QUERY (Screens <= 1024px or Touch Devices)
    ========================================================================== */
 @media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  /* Global Native App Lock (Fixed Scaling & Non-Zoomable Constraints) */
+  html, body {
+    touch-action: pan-x pan-y !important;
+    overscroll-behavior-y: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+
+  /* Form inputs allow selection and enforce 16px to prevent iOS auto-zoom */
+  input, textarea, select {
+    -webkit-user-select: auto !important;
+    user-select: auto !important;
+    font-size: 16px !important;
+  }
+
   /* App Shell & Full-Screen Mobile Layout */
   .app-container {
     display: block !important;
@@ -276,12 +300,13 @@
   }
 
   .wallet-balance-val {
-    font-size: 2.35rem;
+    font-size: 2.75rem;
     font-weight: 900;
     color: #0f172a;
-    line-height: 1.1;
-    letter-spacing: -0.5px;
+    line-height: 1;
+    letter-spacing: -1.5px;
     word-break: break-all;
+    -webkit-font-smoothing: antialiased;
   }
 
   /* Income & Expense Dual Pills below amount */
@@ -519,23 +544,23 @@
   }
 
   /* ==========================================================================
-     7. RECENT TRANSACTIONS HEADER & LIST (Individual Floating Cards)
+     7. UNIFIED TRANSACTIONS CARD & RECENT LIST (Matching Reference App)
      ========================================================================== */
   .mobile-section-header {
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     padding: 0 4px;
   }
 
   .mobile-section-title {
-    font-size: 1.18rem;
+    font-size: 1.15rem;
     font-weight: 800;
     color: #0f172a;
   }
 
   .mobile-view-all-link {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: #0284c7;
     text-decoration: none;
@@ -543,16 +568,132 @@
   }
 
   .mobile-tx-list-container {
+    display: flex !important;
     flex-direction: column;
-    gap: 12px;
+    margin-bottom: 18px;
     box-sizing: border-box;
   }
 
+  /* Unified Card containing all transaction rows with dividers (Matching Reference Prayer Times Card) */
+  .mobile-unified-card {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .mobile-unified-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-unified-row {
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f8fafc;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+  }
+
+  .mobile-unified-row:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-unified-row:active {
+    background-color: #f8fafc;
+  }
+
+  .mobile-tx-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .mobile-tx-icon-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .mobile-tx-details {
+    min-width: 0;
+  }
+
+  .mobile-tx-title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-tx-sub {
+    font-size: 0.76rem;
+    color: #64748b;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .mobile-tx-amount {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+    white-space: nowrap;
+  }
+
+  /* Symmetrical Dual Footer Buttons (Matching '🔔 Alarm | 📅 Calendar' in Reference Image) */
+  .mobile-unified-card-footer {
+    display: flex;
+    border-top: 1px solid #f1f5f9;
+    background: #fafcff;
+    box-sizing: border-box;
+  }
+
+  .mobile-card-footer-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 13px 14px;
+    border: none;
+    background: transparent;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0284c7;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-card-footer-btn:first-child {
+    border-right: 1px solid #f1f5f9;
+  }
+
+  .mobile-card-footer-btn:active {
+    background: #f1f5f9;
+  }
+
+  /* Individual Floating Item Fallback */
   .mobile-tx-item {
     background: #ffffff;
     border: 1px solid #f1f5f9;
     border-radius: 20px;
-    padding: 15px 16px;
+    padding: 14px 16px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     display: flex;
     align-items: center;
@@ -567,50 +708,106 @@
     background-color: #f8fafc;
   }
 
-  .mobile-tx-left {
+  /* ==========================================================================
+     7.1 SMART FINANCIAL HEALTH BANNER (Matching Reference Promo Banner)
+     ========================================================================== */
+  .mobile-insights-banner {
+    background: #ffffff;
+    border: 1px solid #e0f2fe;
+    border-radius: 20px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.04);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 14px;
-    min-width: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
   }
 
-  .mobile-tx-icon-badge {
-    width: 48px;
-    height: 48px;
-    border-radius: 15px;
+  .mobile-insights-banner:active {
+    transform: scale(0.99);
+  }
+
+  .insights-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #ecfdf5;
+    color: #16a34a;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     flex-shrink: 0;
   }
 
-  .mobile-tx-details {
+  .insights-content {
     min-width: 0;
   }
 
-  .mobile-tx-title {
-    font-size: 1.02rem;
-    font-weight: 700;
-    color: #0f172a;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .mobile-tx-sub {
-    font-size: 0.8rem;
-    color: #64748b;
-    display: block;
-    margin-top: 2px;
-  }
-
-  .mobile-tx-amount {
-    font-size: 1.22rem;
+  .insights-title {
+    font-size: 0.98rem;
     font-weight: 800;
     color: #0f172a;
-    white-space: nowrap;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .insights-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* ==========================================================================
+     7.2 TOP FEATURES & QUICK SERVICES GRID (Matching Reference Top Features)
+     ========================================================================== */
+  .mobile-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+  }
+
+  .mobile-tool-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-tool-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: transform 0.15s ease;
+  }
+
+  .mobile-tool-item:active .mobile-tool-icon {
+    transform: scale(0.92);
+  }
+
+  .mobile-tool-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #475569;
+    margin-top: 8px;
+    text-align: center;
+    line-height: 1.2;
   }
 
   /* ==========================================================================
@@ -967,5 +1164,7 @@ html.is-mobile-device .mobile-accounts-grid { display: grid !important; }
 html.is-mobile-device .mobile-toggle-wrapper { display: flex !important; }
 html.is-mobile-device .mobile-section-header { display: flex !important; }
 html.is-mobile-device .mobile-tx-list-container { display: flex !important; }
+html.is-mobile-device .mobile-insights-banner { display: flex !important; }
+html.is-mobile-device .mobile-tools-grid { display: grid !important; }
 html.is-mobile-device .mobile-fab { display: flex !important; }
 html.is-mobile-device .mobile-bottom-nav { display: flex !important; }
