@@ -1,5 +1,5 @@
 // Service Worker for Personal Finance Manager - Smart Offline Edition
-const CACHE_NAME = 'pfm-offline-v7';
+const CACHE_NAME = 'pfm-offline-v8';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

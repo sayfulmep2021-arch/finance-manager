@@ -58,7 +58,7 @@ export async function navigateTo(route) {
 
   currentRoute = route || 'dashboard';
 
-  // Update active navigation links
+  // Update desktop active navigation links
   document.querySelectorAll('.nav-link').forEach(link => {
     if (link.getAttribute('href') === `#${currentRoute}`) {
       link.classList.add('active');
@@ -66,6 +66,21 @@ export async function navigateTo(route) {
       link.classList.remove('active');
     }
   });
+
+  // Update mobile active bottom navigation links
+  document.querySelectorAll('.bnav-item').forEach(link => {
+    if (link.getAttribute('data-bnav') === currentRoute) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // Close mobile sidebar if open
+  const sidebar = document.querySelector('.app-sidebar');
+  if (sidebar && sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+  }
 
   // Render view
   container.innerHTML = '<div class="loading-spinner">⌛ লোড হচ্ছে...</div>';
@@ -230,6 +245,54 @@ async function initApp() {
   if (mobileToggle && sidebar) {
     mobileToggle.addEventListener('click', () => {
       sidebar.classList.toggle('open');
+    });
+  }
+
+  // Mobile Floating Action Button (FAB) & Quick Action Modal
+  const mobileFab = document.getElementById('mobile-fab');
+  const quickAddModal = document.getElementById('mobile-quick-add-modal');
+  const quickAddClose = document.getElementById('quick-action-close');
+
+  if (mobileFab && quickAddModal) {
+    mobileFab.addEventListener('click', () => {
+      quickAddModal.classList.remove('hidden');
+    });
+  }
+
+  if (quickAddClose && quickAddModal) {
+    quickAddClose.addEventListener('click', () => {
+      quickAddModal.classList.add('hidden');
+    });
+  }
+
+  if (quickAddModal) {
+    quickAddModal.addEventListener('click', (e) => {
+      if (e.target === quickAddModal) {
+        quickAddModal.classList.add('hidden');
+      }
+    });
+  }
+
+  const qaExpense = document.getElementById('qa-btn-expense');
+  const qaIncome = document.getElementById('qa-btn-income');
+  const qaTransfer = document.getElementById('qa-btn-transfer');
+
+  if (qaExpense && quickAddModal) {
+    qaExpense.addEventListener('click', () => {
+      quickAddModal.classList.add('hidden');
+      window.location.hash = '#expenses';
+    });
+  }
+  if (qaIncome && quickAddModal) {
+    qaIncome.addEventListener('click', () => {
+      quickAddModal.classList.add('hidden');
+      window.location.hash = '#income';
+    });
+  }
+  if (qaTransfer && quickAddModal) {
+    qaTransfer.addEventListener('click', () => {
+      quickAddModal.classList.add('hidden');
+      window.location.hash = '#accounts';
     });
   }
 

@@ -129,6 +129,60 @@
       <main id="view-container" class="view-container">
         <!-- Rendered by Router -->
       </main>
+
+      <!-- Mobile Floating Action Button (FAB) -->
+      <button type="button" id="mobile-fab" class="mobile-fab" aria-label="Add Transaction" title="নতুন লেনদেন যুক্ত করুন">
+        <span class="fab-icon">➕</span>
+      </button>
+
+      <!-- Mobile Fixed Bottom Navigation (Rule: Only displays on screens <= 768px) -->
+      <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
+        <a href="#dashboard" class="bnav-item active" data-bnav="dashboard">
+          <span class="bnav-icon">🏠</span>
+          <span class="bnav-label" data-i18n="bnavHome">হোম</span>
+        </a>
+        <a href="#transactions" class="bnav-item" data-bnav="transactions">
+          <span class="bnav-icon">📑</span>
+          <span class="bnav-label" data-i18n="bnavTransactions">খতিয়ান</span>
+        </a>
+        <div class="bnav-fab-space" aria-hidden="true"></div>
+        <a href="#savings" class="bnav-item" data-bnav="savings">
+          <span class="bnav-icon">🌱</span>
+          <span class="bnav-label" data-i18n="bnavSavings">সঞ্চয়</span>
+        </a>
+        <a href="#reports" class="bnav-item" data-bnav="reports">
+          <span class="bnav-icon">📊</span>
+          <span class="bnav-label" data-i18n="bnavReports">রিপোর্ট</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Mobile Quick Action Sheet / Modal -->
+  <div id="mobile-quick-add-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="quick-action-sheet">
+      <div class="quick-sheet-handle"></div>
+      <div class="modal-header" style="padding-bottom: 8px;">
+        <h3 class="modal-title" data-i18n="quickActionTitle">দ্রুত নতুন এন্ট্রি যোগ করুন</h3>
+        <button type="button" class="modal-close" id="quick-action-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="quick-action-grid">
+        <button type="button" class="quick-action-btn btn-qa-expense" id="qa-btn-expense">
+          <span class="qa-btn-icon">🛒</span>
+          <span class="qa-btn-title" data-i18n="qaAddExpense">নতুন ব্যয়</span>
+          <span class="qa-btn-desc">দৈনন্দিন খরচ যোগ করুন</span>
+        </button>
+        <button type="button" class="quick-action-btn btn-qa-income" id="qa-btn-income">
+          <span class="qa-btn-icon">💰</span>
+          <span class="qa-btn-title" data-i18n="qaAddIncome">নতুন আয়</span>
+          <span class="qa-btn-desc">বেতন বা প্রাপ্তি যোগ করুন</span>
+        </button>
+        <button type="button" class="quick-action-btn btn-qa-transfer" id="qa-btn-transfer">
+          <span class="qa-btn-icon">🔄</span>
+          <span class="qa-btn-title" data-i18n="qaTransfer">ট্রান্সফার</span>
+          <span class="qa-btn-desc">হিসাবে স্থানান্তর করুন</span>
+        </button>
+      </div>
     </div>
   </div>
 

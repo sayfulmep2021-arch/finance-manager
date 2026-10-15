@@ -12,7 +12,7 @@ if not exist "%GIT_EXE%" (
 
 "%GIT_EXE%" branch -M main
 "%GIT_EXE%" add .
-"%GIT_EXE%" commit -m "Deploy complete Personal Finance Manager with all folders" >nul 2>&1
+"%GIT_EXE%" commit -m "Update Mobile UI with Wallet Card, Circular Progress, FAB, and Bottom Nav" >nul 2>&1
 "%GIT_EXE%" push -u origin main --force
 
 echo.
