@@ -1,27 +1,35 @@
 /* Mobile & Tablet Responsive Optimizations */
 /* Personal Finance Manager — Smart Offline Edition */
+/* Pixel-Perfect Alignment with Reference Mobile UI */
 
 /* ==========================================================================
    1. DESKTOP VIEW GUARD (Screens > 768px)
-   Ensure 100% desktop fidelity; hide mobile-only bottom nav, FAB and modals
+   Ensure 100% desktop fidelity; hide mobile-only components completely
    ========================================================================== */
 @media (min-width: 769px) {
-  .mobile-bottom-nav,
-  .mobile-fab,
-  #mobile-quick-add-modal,
   .mobile-app-header,
-  .mobile-only,
-  .mobile-only-block,
-  .mobile-tabs-container,
-  .mobile-accounts-section,
-  .mobile-wallet-card {
+  .mobile-wallet-card,
+  .mobile-accounts-grid,
+  .mobile-toggle-wrapper,
+  .mobile-section-header,
+  .mobile-tx-list-container,
+  .mobile-fab,
+  .mobile-bottom-nav,
+  #mobile-quick-add-modal,
+  .mobile-only {
     display: none !important;
   }
-  .desktop-only-table {
-    display: block !important;
-  }
+
   .desktop-kpi-grid {
     display: grid !important;
+  }
+
+  .desktop-only-grid {
+    display: grid !important;
+  }
+
+  .desktop-only-table {
+    display: block !important;
   }
 }
 
@@ -42,9 +50,17 @@
 
 /* ==========================================================================
    2. MOBILE VIEW (Screens <= 768px)
-   Transform app into full mobile-first app experience
+   Matches Reference Image Pixel-for-Pixel: Premium Fintech App UI
    ========================================================================== */
 @media (max-width: 768px) {
+  /* Hide Desktop Elements on Mobile */
+  .view-header,
+  .desktop-kpi-grid,
+  .desktop-only-grid,
+  .desktop-only-table {
+    display: none !important;
+  }
+
   /* Layout & Navigation */
   .mobile-toggle {
     display: block;
@@ -66,7 +82,7 @@
 
   .app-header {
     padding: 0 14px;
-    height: 56px;
+    height: 52px;
   }
 
   .brand-title {
@@ -80,86 +96,109 @@
 
   /* Main Viewport Container with Bottom Nav clearance */
   .view-container {
-    padding: 14px 14px 100px 14px !important;
+    padding: 10px 14px 105px 14px !important;
     max-width: 100vw;
     overflow-x: hidden;
-  }
-
-  .view-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .view-title {
-    font-size: 1.3rem;
-  }
-
-  .view-subtitle {
-    font-size: 0.8rem;
-  }
-
-  .filters-bar {
-    width: 100%;
-    display: flex;
-    gap: 8px;
-  }
-
-  .filters-bar .filter-group {
-    flex: 1;
-  }
-
-  .filters-bar .filter-group label {
-    font-size: 0.75rem;
-    margin-bottom: 3px;
-  }
-
-  .form-select, .form-input {
-    font-size: 0.88rem;
-    padding: 8px 10px;
-  }
-
-  /* Desktop KPI Grid: hide on mobile in favor of Wallet Card */
-  .desktop-kpi-grid {
-    display: none !important;
+    background-color: var(--bg-main);
   }
 
   /* ==========================================================================
-     3. MOBILE WALLET SUMMARY CARD (Fintech Gradient)
+     3. MOBILE APP HEADER (Greeting & Profile Avatar)
+     ========================================================================== */
+  .mobile-app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 2px 14px 2px;
+    background: transparent;
+  }
+
+  .mobile-greeting-block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-greeting-sub {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .mobile-greeting-name {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+
+  .mobile-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mobile-bell-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    color: #0f172a;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+
+  .mobile-avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0284c7;
+  }
+
+  .avatar-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ==========================================================================
+     4. MAIN WALLET SUMMARY CARD (Fintech Light Gradient & Real Progress Ring)
      ========================================================================== */
   .mobile-wallet-card {
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-    color: #ffffff;
-    border-radius: var(--radius-lg);
-    padding: 18px;
+    background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+    border: 1px solid #e0f2fe;
+    border-radius: 24px;
+    padding: 20px;
     margin-bottom: 18px;
-    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.28);
+    box-shadow: 0 4px 18px rgba(2, 132, 199, 0.05);
     position: relative;
-    overflow: hidden;
   }
 
   .wallet-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .wallet-sublabel {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.85);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-  }
-
-  .wallet-period-badge {
-    font-size: 0.7rem;
-    background: rgba(255, 255, 255, 0.18);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-weight: 500;
+    font-size: 0.95rem;
+    color: #334155;
+    font-weight: 700;
   }
 
   .wallet-amount-row {
@@ -170,17 +209,72 @@
   }
 
   .wallet-balance-val {
-    font-size: 1.85rem;
-    font-weight: 800;
-    line-height: 1.15;
-    color: #ffffff;
+    font-size: 2.15rem;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
     word-break: break-all;
   }
 
-  /* Circular Progress Ring */
+  /* Income & Expense Dual Pills below amount */
+  .wallet-pills-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .wallet-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 18px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .wallet-badge-income {
+    background: #ecfdf5;
+    color: #16a34a;
+  }
+
+  .wallet-badge-income .badge-circle {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #16a34a;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  .wallet-badge-expense {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  .wallet-badge-expense .badge-circle {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #dc2626;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  /* Circular Progress Ring matching the image */
   .wallet-circular-ring {
-    width: 58px;
-    height: 58px;
+    width: 82px;
+    height: 82px;
     position: relative;
     flex-shrink: 0;
   }
@@ -193,285 +287,302 @@
 
   .ring-bg {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.22);
-    stroke-width: 5;
+    stroke: #e0f2fe;
+    stroke-width: 6;
   }
 
   .ring-fg {
     fill: none;
-    stroke: #ffffff;
-    stroke-width: 5;
+    stroke: #0284c7;
+    stroke-width: 6;
     stroke-linecap: round;
     transition: stroke-dashoffset 0.6s ease;
   }
 
-  .ring-label {
+  .ring-label-wrap {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 0.68rem;
-    font-weight: 700;
-    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    width: 100%;
+  }
+
+  .ring-subtext {
+    font-size: 0.65rem;
+    color: #64748b;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .ring-pct-text {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #0f172a;
     line-height: 1;
   }
 
-  /* Dual KPI Pills: Income & Expense */
-  .wallet-kpi-pills {
-    display: flex;
-    gap: 8px;
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  /* ==========================================================================
+     5. ACCOUNT CARDS (2-Column Grid matching EBL & Bkash)
+     ========================================================================== */
+  .mobile-accounts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
   }
 
-  .wallet-pill {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-md);
-    padding: 8px 10px;
+  .mobile-account-card {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 18px;
+    padding: 13px 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    text-decoration: none;
   }
 
-  .pill-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+  .mobile-account-card:active {
+    transform: scale(0.98);
+  }
+
+  .account-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.85rem;
-    font-weight: 800;
+    font-size: 1.25rem;
     flex-shrink: 0;
   }
 
-  .pill-icon-income {
-    background: rgba(34, 197, 94, 0.3);
-    color: #86efac;
+  .icon-bank {
+    background: #eff6ff;
+    color: #0284c7;
   }
 
-  .pill-icon-expense {
-    background: rgba(239, 68, 68, 0.3);
-    color: #fca5a5;
+  .icon-bkash {
+    background: #fdf2f8;
+    color: #db2777;
   }
 
-  .pill-label {
-    font-size: 0.68rem;
-    color: rgba(255, 255, 255, 0.82);
-    display: block;
+  .icon-cash {
+    background: #f0fdf4;
+    color: #16a34a;
   }
 
-  .pill-value {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #ffffff;
-    display: block;
-    line-height: 1.2;
+  .account-card-info {
+    min-width: 0;
   }
 
-  /* ==========================================================================
-     4. MOBILE ACCOUNT CARDS (Horizontal Swipe Strip)
-     ========================================================================== */
-  .mobile-accounts-section {
-    margin-bottom: 20px;
-  }
-
-  .section-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-
-  .section-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-main);
-  }
-
-  .mobile-accounts-strip {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 4px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .mobile-accounts-strip::-webkit-scrollbar {
-    display: none;
-  }
-
-  .account-chip {
-    flex: 0 0 135px;
-    scroll-snap-align: start;
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 10px 12px;
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    transition: transform 0.15s ease;
-  }
-
-  .account-chip:active {
-    transform: scale(0.97);
-  }
-
-  .chip-top {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .chip-icon {
-    font-size: 1.1rem;
-  }
-
-  .chip-name {
-    font-size: 0.78rem;
+  .account-card-name {
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--text-muted);
+    color: #64748b;
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .chip-balance {
-    font-size: 0.92rem;
-    font-weight: 700;
-    color: var(--text-main);
+  .account-card-val {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0f172a;
+    display: block;
+    margin-top: 1px;
+    line-height: 1.2;
   }
 
   /* ==========================================================================
-     5. SEGMENTED TABS & MOBILE TRANSACTION CARDS
+     6. SEGMENTED TOGGLE TABS (Matching 'আয়' & 'ব্যয়')
      ========================================================================== */
-  .mobile-tabs-container {
-    margin-bottom: 12px;
-  }
-
-  .segmented-tabs {
+  .mobile-toggle-wrapper {
+    background: #f1f5f9;
+    border-radius: 16px;
+    padding: 4px;
     display: flex;
-    background: var(--bg-subtle);
-    border-radius: var(--radius-md);
-    padding: 3px;
-    gap: 3px;
+    gap: 4px;
+    margin-bottom: 20px;
   }
 
-  .tab-btn {
+  .toggle-tab-btn {
     flex: 1;
-    padding: 8px 10px;
-    border-radius: var(--radius-sm);
+    padding: 12px 16px;
     border: none;
+    border-radius: 12px;
     background: transparent;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-muted);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #64748b;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-align: center;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .tab-btn.active {
-    background: var(--bg-surface);
-    color: var(--primary);
-    box-shadow: var(--shadow-sm);
+  .toggle-tab-btn.active.tab-expense {
+    background: #ffffff;
+    color: #ef4444;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-top: 2px solid #ef4444;
   }
 
-  .mobile-tx-list {
+  .toggle-tab-btn.active.tab-income {
+    background: #ffffff;
+    color: #16a34a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-top: 2px solid #16a34a;
+  }
+
+  /* ==========================================================================
+     7. RECENT TRANSACTIONS HEADER & LIST (Matching Cards in Image)
+     ========================================================================== */
+  .mobile-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+
+  .mobile-section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .mobile-view-all-link {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0284c7;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .mobile-tx-list-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
 
-  .mobile-tx-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 10px 12px;
+  .mobile-tx-item {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: var(--shadow-sm);
+    cursor: pointer;
     transition: background-color 0.15s;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .mobile-tx-card:active {
-    background-color: var(--bg-subtle);
+  .mobile-tx-item:active {
+    background-color: #f8fafc;
   }
 
   .mobile-tx-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
     min-width: 0;
   }
 
-  .tx-cat-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: var(--radius-md);
+  .mobile-tx-icon-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    background: var(--bg-subtle);
+    font-size: 1.35rem;
     flex-shrink: 0;
   }
 
-  .tx-meta {
+  .mobile-tx-details {
     min-width: 0;
   }
 
-  .tx-desc {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--text-main);
+  .mobile-tx-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: block;
   }
 
-  .tx-date-acc {
-    font-size: 0.72rem;
-    color: var(--text-muted);
+  .mobile-tx-sub {
+    font-size: 0.78rem;
+    color: #64748b;
     display: block;
     margin-top: 2px;
   }
 
-  .tx-amount-badge {
-    font-size: 0.92rem;
-    font-weight: 700;
+  .mobile-tx-amount {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0f172a;
     white-space: nowrap;
-    text-align: right;
   }
 
-  .tx-amount-badge.income { color: var(--success); }
-  .tx-amount-badge.expense { color: var(--danger); }
-
   /* ==========================================================================
-     6. FIXED BOTTOM NAVIGATION & FLOATING ACTION BUTTON (FAB)
+     8. FLOATING ACTION BUTTON (FAB) & BOTTOM NAVIGATION
      ========================================================================== */
+  .mobile-fab {
+    position: fixed;
+    right: 20px;
+    bottom: 84px;
+    left: auto;
+    transform: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #0284c7;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    cursor: pointer;
+    z-index: 990;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-fab:active {
+    transform: scale(0.92);
+  }
+
   .mobile-bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
-    background-color: var(--bg-surface);
-    border-top: 1px solid var(--border);
+    height: 66px;
+    background-color: #ffffff;
+    border-top: 1px solid #f1f5f9;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    z-index: 990;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 985;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
@@ -481,62 +592,32 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: var(--text-muted);
-    font-size: 0.68rem;
-    font-weight: 500;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 600;
     flex: 1;
     height: 100%;
-    transition: all 0.15s ease;
-    padding: 3px 0;
+    transition: color 0.15s ease;
+    padding: 6px 0;
     -webkit-tap-highlight-color: transparent;
   }
 
   .bnav-item.active {
-    color: var(--primary);
-    font-weight: 700;
+    color: #0284c7;
+  }
+
+  .bnav-item.active .bnav-icon {
+    transform: scale(1.08);
   }
 
   .bnav-icon {
-    font-size: 1.25rem;
-    line-height: 1.1;
-    margin-bottom: 2px;
+    font-size: 1.35rem;
+    line-height: 1;
+    margin-bottom: 3px;
+    transition: transform 0.15s ease;
   }
 
-  .bnav-fab-space {
-    width: 50px;
-    flex-shrink: 0;
-  }
-
-  /* Center Floating Action Button */
-  .mobile-fab {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-    color: #ffffff;
-    border: 3px solid var(--bg-surface);
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.45rem;
-    cursor: pointer;
-    z-index: 995;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .mobile-fab:active {
-    transform: translateX(-50%) scale(0.92);
-  }
-
-  /* ==========================================================================
-     7. QUICK ACTION SHEET (Bottom Modal)
-     ========================================================================== */
+  /* Quick Action Sheet Modal */
   .quick-action-sheet {
     background: var(--bg-surface);
     width: 100%;

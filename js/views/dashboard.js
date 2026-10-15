@@ -1,5 +1,5 @@
 // Dashboard View for Personal Finance Manager
-// Bilingual, 100% Offline, Desktop & Mobile App Experience
+// Matching Reference Mobile App Design (Light Theme, Fintech Wallet Card, Circular Progress)
 import { getDashboardMetrics } from '../ledger.js';
 import { dbGetAll } from '../db.js';
 import { t, formatMoney, formatDate, getLanguage } from '../i18n.js';
@@ -16,24 +16,79 @@ function getGreeting() {
   return t('greetingGeneral');
 }
 
+function getUserName() {
+  return localStorage.getItem('pfm_user_name') || t('userGreetingName') || 'Shaikat';
+}
+
+function formatRelativeDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const txDate = new Date(dateStr);
+    const today = new Date();
+    if (txDate.toDateString() === today.toDateString()) {
+      return t('today');
+    }
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (txDate.toDateString() === yesterday.toDateString()) {
+      return t('yesterday');
+    }
+    return formatDate(dateStr);
+  } catch (e) {
+    return formatDate(dateStr);
+  }
+}
+
+function getCategoryBadgeStyle(categoryId) {
+  const id = (categoryId || '').toLowerCase();
+  if (id.includes('food') || id.includes('restaurant') || id.includes('tea')) {
+    return { bg: '#fff7ed', border: '#ffedd5', text: '#ea580c', defaultIcon: '☕' };
+  }
+  if (id.includes('grocery') || id.includes('bazar') || id.includes('fish')) {
+    return { bg: '#f5f3ff', border: '#ede9fe', text: '#7c3aed', defaultIcon: '🐟' };
+  }
+  if (id.includes('shopping') || id.includes('personal') || id.includes('health') || id.includes('cosmetics')) {
+    return { bg: '#fdf2f8', border: '#fce7f3', text: '#db2777', defaultIcon: '🧴' };
+  }
+  if (id.includes('bills') || id.includes('utility') || id.includes('tech') || id.includes('ai') || id.includes('sub')) {
+    return { bg: '#fef2f2', border: '#fee2e2', text: '#dc2626', defaultIcon: '📷' };
+  }
+  if (id.includes('transport') || id.includes('commute')) {
+    return { bg: '#f0fdf4', border: '#dcfce7', text: '#16a34a', defaultIcon: '🚗' };
+  }
+  return { bg: '#eff6ff', border: '#dbeafe', text: '#0284c7', defaultIcon: '💰' };
+}
+
 export async function renderDashboard(container) {
   const greeting = getGreeting();
+  const userName = getUserName();
 
   container.innerHTML = `
-    <!-- Mobile App Header (Visible on screens <= 768px) -->
+    <!-- MOBILE APP HEADER (Matching Reference Screenshot) -->
     <div class="mobile-app-header">
       <div class="mobile-greeting-block">
-        <span class="mobile-greeting-sub">${greeting},</span>
-        <h2 class="mobile-greeting-name" data-i18n="userGreetingName">${t('userGreetingName')} 👋</h2>
+        <span class="mobile-greeting-sub">${greeting}</span>
+        <h2 class="mobile-greeting-name" id="user-display-name" title="নাম পরিবর্তন করতে ক্লিক করুন">
+          ${userName}
+        </h2>
       </div>
-      <div class="mobile-header-tools">
-        <span id="mobile-period-pill" class="mobile-period-pill">
-          ${selectedPeriod === 'this_month' ? t('thisMonth') : (selectedPeriod === 'last_month' ? t('lastMonth') : (selectedPeriod === 'this_year' ? t('thisYear') : t('allTime')))}
-        </span>
+      <div class="mobile-header-right">
+        <!-- Notification Bell Icon -->
+        <button type="button" class="mobile-bell-btn" id="mobile-bell-btn" aria-label="Notifications" title="বিজ্ঞপ্তি ও নিরাপত্তা স্ট্যাটাস">
+          🔔
+        </button>
+        <!-- User Avatar Circle -->
+        <div class="mobile-avatar-circle" id="mobile-avatar-btn" title="প্রোফাইল">
+          <svg viewBox="0 0 40 40" width="40" height="40" class="avatar-svg">
+            <circle cx="20" cy="20" r="19" fill="#0284c7"/>
+            <circle cx="20" cy="15" r="7" fill="#ffffff"/>
+            <path d="M7 34 C7 25, 33 25, 33 34" fill="#ffffff"/>
+          </svg>
+        </div>
       </div>
     </div>
 
-    <!-- Desktop View Header (Visible on screens > 768px) -->
+    <!-- DESKTOP VIEW HEADER (Screens > 768px) -->
     <div class="view-header">
       <div>
         <h1 class="view-title" data-i18n="navDashboard">${t('navDashboard')}</h1>
@@ -58,55 +113,70 @@ export async function renderDashboard(container) {
       </div>
     </div>
 
-    <!-- MOBILE MAIN WALLET SUMMARY CARD (Fintech Design with Circular SVG Ring) -->
+    <!-- MAIN WALLET SUMMARY CARD (Matching Reference Image: Light Soft Blue, Large Balance, Real Progress Ring) -->
     <div class="mobile-wallet-card" id="mobile-wallet-card">
       <div class="wallet-header">
         <span class="wallet-sublabel" data-i18n="walletTotalBalance">${t('walletTotalBalance')}</span>
-        <span class="wallet-period-badge" id="wallet-period-badge">${t('thisMonth')}</span>
       </div>
       <div class="wallet-amount-row">
-        <div class="wallet-balance-val" id="mobile-wallet-balance">৳ ০.০০</div>
-        <!-- Circular Progress Ring (Zero-Cost Native SVG) -->
-        <div class="wallet-circular-ring" id="wallet-progress-container" title="ব্যয় বনাম আয় অনুপাত">
-          <svg viewBox="0 0 60 60">
-            <circle class="ring-bg" cx="30" cy="30" r="24"></circle>
-            <circle class="ring-fg" id="wallet-ring-fg" cx="30" cy="30" r="24"
-              stroke-dasharray="150.8" stroke-dashoffset="150.8"></circle>
-          </svg>
-          <span class="ring-label" id="wallet-ring-label">০%</span>
-        </div>
-      </div>
-
-      <!-- Dual KPI Pills: Total Income & Total Expense -->
-      <div class="wallet-kpi-pills">
-        <div class="wallet-pill">
-          <div class="pill-icon pill-icon-income">↑</div>
-          <div>
-            <span class="pill-label" data-i18n="cardTotalIncome">${t('cardTotalIncome')}</span>
-            <span class="pill-value" id="mobile-wallet-income">৳ ০.০০</span>
+        <div>
+          <div class="wallet-balance-val" id="mobile-wallet-balance">৳ ০</div>
+          <!-- Dual Income & Expense Pills below amount -->
+          <div class="wallet-pills-row">
+            <div class="wallet-badge-pill wallet-badge-income">
+              <span class="badge-circle">↑</span>
+              <span id="mobile-wallet-income">+৳ ০</span>
+            </div>
+            <div class="wallet-badge-pill wallet-badge-expense">
+              <span class="badge-circle">↓</span>
+              <span id="mobile-wallet-expense">-৳ ০</span>
+            </div>
           </div>
         </div>
-        <div class="wallet-pill">
-          <div class="pill-icon pill-icon-expense">↓</div>
-          <div>
-            <span class="pill-label" data-i18n="cardTotalExpense">${t('cardTotalExpense')}</span>
-            <span class="pill-value" id="mobile-wallet-expense">৳ ০.০০</span>
+
+        <!-- Circular Progress Ring (Zero-Cost SVG Ring with Spent %) -->
+        <div class="wallet-circular-ring" id="wallet-progress-container" title="খরচের শতকরা হার">
+          <svg viewBox="0 0 80 80">
+            <circle class="ring-bg" cx="40" cy="40" r="32"></circle>
+            <circle class="ring-fg" id="wallet-ring-fg" cx="40" cy="40" r="32"
+              stroke-dasharray="201.06" stroke-dashoffset="201.06"></circle>
+          </svg>
+          <div class="ring-label-wrap">
+            <span class="ring-subtext" data-i18n="spentRatio">${t('spentRatio')}</span>
+            <span class="ring-pct-text" id="wallet-ring-label">০%</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- MOBILE ACCOUNT CARDS (Horizontal Scroll Strip) -->
-    <div class="mobile-accounts-section" id="mobile-accounts-section">
-      <div class="section-title-row">
-        <h3 class="section-title" data-i18n="accountsTitle">${t('accountsTitle')}</h3>
-        <a href="#accounts" style="font-size: 0.8rem; color: var(--primary); font-weight: 600; text-decoration: none;">
-          ${t('viewAllTransactions')} &rarr;
-        </a>
-      </div>
-      <div class="mobile-accounts-strip" id="mobile-accounts-strip">
-        <!-- Rendered dynamically -->
-      </div>
+    <!-- MOBILE ACCOUNT CARDS (2-Column Grid matching EBL & Bkash in Image) -->
+    <div class="mobile-accounts-grid" id="mobile-accounts-grid">
+      <!-- Populated dynamically with Bank, bKash, Cash cards -->
+    </div>
+
+    <!-- SEGMENTED TOGGLE TABS (Matching 'আয়' & 'ব্যয়' in Image) -->
+    <div class="mobile-toggle-wrapper">
+      <button type="button" class="toggle-tab-btn ${activeMobileTab === 'income' ? 'active tab-income' : ''}" id="tab-btn-income" data-i18n="tabIncome">
+        ${t('tabIncome')}
+      </button>
+      <button type="button" class="toggle-tab-btn ${activeMobileTab === 'expense' ? 'active tab-expense' : ''}" id="tab-btn-expense" data-i18n="tabExpense">
+        ${t('tabExpense')}
+      </button>
+    </div>
+
+    <!-- RECENT TRANSACTIONS SECTION HEADER (Matching 'সাম্প্রতিক ব্যয়' and 'সব দেখুন') -->
+    <div class="mobile-section-header">
+      <h3 class="mobile-section-title" id="mobile-tx-section-title">
+        ${activeMobileTab === 'expense' ? t('recentExpenseTitle') : t('recentIncomeTitle')}
+      </h3>
+      <a href="#transactions" class="mobile-view-all-link" id="mobile-view-all-link" data-i18n="viewAllShort">
+        ${t('viewAllShort')}
+      </a>
+    </div>
+
+    <!-- MOBILE RECENT TRANSACTIONS LIST (Individual Floating Cards) -->
+    <div class="mobile-tx-list-container" id="mobile-tx-list-container">
+      <!-- Populated dynamically -->
     </div>
 
     <!-- DESKTOP KPI GRID (Retained 100% for screens > 768px) -->
@@ -144,28 +214,15 @@ export async function renderDashboard(container) {
       </div>
     </div>
 
-    <!-- Main Dashboard Grid -->
-    <div class="dashboard-grid">
+    <!-- DESKTOP DASHBOARD GRID (Screens > 768px) -->
+    <div class="dashboard-grid desktop-only-grid">
       <!-- Recent Transactions Section -->
       <div class="card recent-tx-card">
         <div class="card-header flex-between">
           <h2 class="card-title" data-i18n="recentTransactions">${t('recentTransactions')}</h2>
           <button id="btn-view-all-tx" class="btn btn-secondary btn-sm" data-i18n="viewAllTransactions">${t('viewAllTransactions')}</button>
         </div>
-
-        <!-- Mobile Segmented Tabs for Expenses vs Income -->
-        <div class="mobile-tabs-container">
-          <div class="segmented-tabs">
-            <button type="button" class="tab-btn ${activeMobileTab === 'expense' ? 'active' : ''}" id="tab-btn-expense" data-i18n="tabExpense">
-              🛒 ${t('tabExpense')}
-            </button>
-            <button type="button" class="tab-btn ${activeMobileTab === 'income' ? 'active' : ''}" id="tab-btn-income" data-i18n="tabIncome">
-              💰 ${t('tabIncome')}
-            </button>
-          </div>
-        </div>
-
-        <div class="card-body" id="recent-tx-container">
+        <div class="card-body" id="desktop-recent-tx-container">
           <!-- Populated dynamically -->
         </div>
       </div>
@@ -182,47 +239,81 @@ export async function renderDashboard(container) {
     </div>
   `;
 
-  // Populate Accounts Dropdown
+  // Change user name on click
+  const nameEl = document.getElementById('user-display-name');
+  if (nameEl) {
+    nameEl.addEventListener('click', () => {
+      const current = getUserName();
+      const next = prompt('আপনার নাম লিখুন / Enter your name:', current);
+      if (next && next.trim()) {
+        localStorage.setItem('pfm_user_name', next.trim());
+        nameEl.textContent = next.trim();
+      }
+    });
+  }
+
+  // Bell icon click
+  const bellBtn = document.getElementById('mobile-bell-btn');
+  if (bellBtn) {
+    bellBtn.addEventListener('click', () => {
+      const badge = document.getElementById('mis-status-badge');
+      if (badge) badge.click();
+    });
+  }
+
+  // Populate Accounts Dropdown (Desktop)
   const accounts = await dbGetAll('accounts');
   const accountSelect = document.getElementById('dash-filter-account');
-  accounts.forEach(acc => {
-    const opt = document.createElement('option');
-    opt.value = acc.id;
-    opt.textContent = t(acc.nameKey, acc.name || acc.id);
-    if (acc.id === selectedAccount) opt.selected = true;
-    accountSelect.appendChild(opt);
-  });
+  if (accountSelect) {
+    accounts.forEach(acc => {
+      const opt = document.createElement('option');
+      opt.value = acc.id;
+      opt.textContent = t(acc.nameKey, acc.name || acc.id);
+      if (acc.id === selectedAccount) opt.selected = true;
+      accountSelect.appendChild(opt);
+    });
+
+    accountSelect.addEventListener('change', (e) => {
+      selectedAccount = e.target.value;
+      updateDashboardData();
+    });
+  }
 
   // Event Listeners for Filters
-  document.getElementById('dash-filter-period').addEventListener('change', (e) => {
-    selectedPeriod = e.target.value;
-    updateDashboardData();
-  });
+  const periodSelect = document.getElementById('dash-filter-period');
+  if (periodSelect) {
+    periodSelect.addEventListener('change', (e) => {
+      selectedPeriod = e.target.value;
+      updateDashboardData();
+    });
+  }
 
-  accountSelect.addEventListener('change', (e) => {
-    selectedAccount = e.target.value;
-    updateDashboardData();
-  });
+  const viewAllBtn = document.getElementById('btn-view-all-tx');
+  if (viewAllBtn) {
+    viewAllBtn.addEventListener('click', () => {
+      window.location.hash = '#transactions';
+    });
+  }
 
-  document.getElementById('btn-view-all-tx').addEventListener('click', () => {
-    window.location.hash = '#transactions';
-  });
-
-  // Mobile Tabs Listeners
+  // Segmented Toggle Tabs ('আয়' / 'ব্যয়')
   const tabExpense = document.getElementById('tab-btn-expense');
   const tabIncome = document.getElementById('tab-btn-income');
+  const sectionTitle = document.getElementById('mobile-tx-section-title');
+
   if (tabExpense && tabIncome) {
     tabExpense.addEventListener('click', () => {
       activeMobileTab = 'expense';
-      tabExpense.classList.add('active');
-      tabIncome.classList.remove('active');
+      tabExpense.className = 'toggle-tab-btn active tab-expense';
+      tabIncome.className = 'toggle-tab-btn';
+      if (sectionTitle) sectionTitle.textContent = t('recentExpenseTitle');
       renderRecentTransactionsView();
     });
 
     tabIncome.addEventListener('click', () => {
       activeMobileTab = 'income';
-      tabIncome.classList.add('active');
-      tabExpense.classList.remove('active');
+      tabIncome.className = 'toggle-tab-btn active tab-income';
+      tabExpense.className = 'toggle-tab-btn';
+      if (sectionTitle) sectionTitle.textContent = t('recentIncomeTitle');
       renderRecentTransactionsView();
     });
   }
@@ -250,7 +341,7 @@ async function updateDashboardData() {
   accounts.forEach(a => { accMap[a.id] = a; });
   cachedAccMap = accMap;
 
-  // Update Desktop KPI Cards
+  // 1. Update Desktop KPI Cards
   const incomeEl = document.getElementById('kpi-income');
   const expenseEl = document.getElementById('kpi-expense');
   const netEl = document.getElementById('kpi-net');
@@ -264,26 +355,20 @@ async function updateDashboardData() {
   }
   if (balanceEl) balanceEl.textContent = formatMoney(metrics.totalBalancePaisa);
 
-  // Update Mobile Wallet Summary Card
+  // 2. Update Mobile Main Wallet Summary Card
   const mobBalance = document.getElementById('mobile-wallet-balance');
   const mobIncome = document.getElementById('mobile-wallet-income');
   const mobExpense = document.getElementById('mobile-wallet-expense');
   const mobRingFg = document.getElementById('wallet-ring-fg');
   const mobRingLabel = document.getElementById('wallet-ring-label');
-  const mobPeriodBadge = document.getElementById('wallet-period-badge');
 
   if (mobBalance) mobBalance.textContent = formatMoney(metrics.totalBalancePaisa);
-  if (mobIncome) mobIncome.textContent = formatMoney(metrics.totalIncomePaisa);
-  if (mobExpense) mobExpense.textContent = formatMoney(metrics.totalExpensePaisa);
+  if (mobIncome) mobIncome.textContent = `+${formatMoney(metrics.totalIncomePaisa)}`;
+  if (mobExpense) mobExpense.textContent = `-${formatMoney(metrics.totalExpensePaisa)}`;
 
-  if (mobPeriodBadge) {
-    mobPeriodBadge.textContent = selectedPeriod === 'this_month' ? t('thisMonth') : (selectedPeriod === 'last_month' ? t('lastMonth') : (selectedPeriod === 'this_year' ? t('thisYear') : t('allTime')));
-  }
-
-  // Calculate Real Financial Circular Progress Ring (Zero-Cost SVG)
-  // Ratio of Expense to Income, or 100% if expenses exceed income
+  // Circular Progress Ring: Calculate Real Spent %
   if (mobRingFg && mobRingLabel) {
-    const circumference = 150.8; // 2 * PI * 24
+    const circumference = 201.06; // 2 * PI * 32
     let percentage = 0;
     if (metrics.totalIncomePaisa > 0) {
       percentage = Math.min(100, Math.round((metrics.totalExpensePaisa / metrics.totalIncomePaisa) * 100));
@@ -295,142 +380,156 @@ async function updateDashboardData() {
     mobRingLabel.textContent = `${percentage}%`;
   }
 
-  // Render Mobile Account Cards Strip
-  const stripContainer = document.getElementById('mobile-accounts-strip');
-  if (stripContainer) {
+  // 3. Render Mobile Account Cards (2-column grid matching EBL & Bkash)
+  const accountsGrid = document.getElementById('mobile-accounts-grid');
+  if (accountsGrid) {
     let accHtml = '';
+    // Show user accounts (e.g. Bank and bKash/Mobile wallet)
     accounts.forEach(acc => {
-      let icon = '💵';
+      let icon = '🏦';
+      let iconClass = 'icon-bank';
       const type = (acc.type || '').toLowerCase();
-      if (type.includes('bank')) icon = '🏦';
-      else if (type.includes('mobile') || (acc.id || '').includes('bkash')) icon = '📱';
-      else if (type.includes('credit')) icon = '💳';
+      const id = (acc.id || '').toLowerCase();
+
+      if (type.includes('mobile') || id.includes('bkash') || id.includes('nagad')) {
+        icon = '📱';
+        iconClass = 'icon-bkash';
+      } else if (type.includes('cash') || id.includes('cash')) {
+        icon = '💵';
+        iconClass = 'icon-cash';
+      }
 
       accHtml += `
-        <div class="account-chip" onclick="window.location.hash='#accounts'">
-          <div class="chip-top">
-            <span class="chip-icon">${icon}</span>
-            <span class="chip-name">${t(acc.nameKey, acc.name || acc.id)}</span>
+        <div class="mobile-account-card" onclick="window.location.hash='#accounts'">
+          <div class="account-card-icon ${iconClass}">${icon}</div>
+          <div class="account-card-info">
+            <span class="account-card-name">${t(acc.nameKey, acc.name || acc.id)}</span>
+            <span class="account-card-val">${formatMoney(acc.balancePaisa || 0)}</span>
           </div>
-          <div class="chip-balance text-primary">${formatMoney(acc.balancePaisa || 0)}</div>
         </div>
       `;
     });
-    stripContainer.innerHTML = accHtml;
+    accountsGrid.innerHTML = accHtml;
   }
 
-  // Render Transactions (both table for desktop & cards for mobile)
+  // 4. Render Transactions
   renderRecentTransactionsView();
 
-  // Render Category Breakdown (Desktop & Mobile)
+  // 5. Render Desktop Category Breakdown
   renderCategoryBreakdownView(metrics, catMap);
 }
 
 function renderRecentTransactionsView() {
-  const txContainer = document.getElementById('recent-tx-container');
-  if (!txContainer || !cachedMetrics) return;
+  const mobContainer = document.getElementById('mobile-tx-list-container');
+  const deskContainer = document.getElementById('desktop-recent-tx-container');
+  if (!cachedMetrics) return;
 
   const allTx = cachedMetrics.recentTransactions || [];
-  
-  // Filter for mobile tab if active
+
+  // Filter based on active tab ('expense' or 'income')
   const filteredTx = allTx.filter(tx => {
     if (activeMobileTab === 'expense') return tx.type === 'expense';
     if (activeMobileTab === 'income') return tx.type === 'income';
     return true;
   });
 
-  if (allTx.length === 0) {
-    txContainer.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📂</div>
-        <h3 class="empty-title">${t('noTransactionsYet')}</h3>
-        <p class="empty-desc">${t('noTransactionsDesc')}</p>
-        <div class="empty-actions">
-          <button class="btn btn-success btn-sm" onclick="window.location.hash='#income'">+ ${t('navIncome')}</button>
-          <button class="btn btn-danger btn-sm" onclick="window.location.hash='#expenses'">+ ${t('navExpenses')}</button>
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  let html = '';
-
-  // 1. Mobile-friendly Card View (Optimized for small screens)
-  html += '<div class="mobile-tx-list mobile-only-block">';
-  if (filteredTx.length === 0) {
-    html += `<p class="text-muted" style="text-align: center; padding: 16px 0; font-size: 0.85rem;">${activeMobileTab === 'expense' ? 'নির্বাচিত সময়ে কোনো ব্যয়ের রেকর্ড নেই' : 'নির্বাচিত সময়ে কোনো আয়ের রেকর্ড নেই'}</p>`;
-  } else {
-    filteredTx.slice(0, 8).forEach(tx => {
-      const cat = cachedCatMap[tx.categoryId];
-      const acc = cachedAccMap[tx.accountId];
-      const catName = cat ? t(cat.nameKey, cat.name) : tx.categoryId;
-      const accName = acc ? t(acc.nameKey, acc.name) : tx.accountId;
-      const isIncome = tx.type === 'income';
-
-      html += `
-        <div class="mobile-tx-card" onclick="window.location.hash='#transactions'">
-          <div class="mobile-tx-left">
-            <div class="tx-cat-icon">${cat?.icon || (isIncome ? '💰' : '🛒')}</div>
-            <div class="tx-meta">
-              <span class="tx-desc">${tx.description || catName}</span>
-              <span class="tx-date-acc">${formatDate(tx.date)} • ${accName}</span>
-            </div>
-          </div>
-          <div class="tx-amount-badge ${isIncome ? 'income' : 'expense'}">
-            ${isIncome ? '+' : '-'}${formatMoney(tx.amountPaisa)}
-          </div>
+  // 1. Render Mobile Card List matching the Screenshot
+  if (mobContainer) {
+    if (filteredTx.length === 0) {
+      mobContainer.innerHTML = `
+        <div style="background: #ffffff; border: 1px solid #f1f5f9; border-radius: 18px; padding: 24px; text-align: center; color: #64748b;">
+          <p style="margin: 0; font-size: 0.9rem;">
+            ${activeMobileTab === 'expense' ? 'নির্বাচিত সময়ে কোনো ব্যয়ের রেকর্ড নেই' : 'নির্বাচিত সময়ে কোনো আয়ের রেকর্ড নেই'}
+          </p>
         </div>
       `;
-    });
+    } else {
+      let mobHtml = '';
+      filteredTx.slice(0, 10).forEach(tx => {
+        const cat = cachedCatMap[tx.categoryId];
+        const style = getCategoryBadgeStyle(tx.categoryId);
+        const catIcon = cat?.icon || style.defaultIcon;
+        const catName = cat ? t(cat.nameKey, cat.name) : tx.categoryId;
+        const isIncome = tx.type === 'income';
+        const relDate = formatRelativeDate(tx.date);
+
+        mobHtml += `
+          <div class="mobile-tx-item" onclick="window.location.hash='#transactions'">
+            <div class="mobile-tx-left">
+              <div class="mobile-tx-icon-badge" style="background-color: ${style.bg}; color: ${style.text}; border: 1px solid ${style.border};">
+                ${catIcon}
+              </div>
+              <div class="mobile-tx-details">
+                <span class="mobile-tx-title">${tx.description || catName}</span>
+                <span class="mobile-tx-sub">${relDate}</span>
+              </div>
+            </div>
+            <div class="mobile-tx-amount">
+              ${formatMoney(tx.amountPaisa)}
+            </div>
+          </div>
+        `;
+      });
+      mobContainer.innerHTML = mobHtml;
+    }
   }
-  html += '</div>';
 
-  // 2. Desktop-friendly Data Table (Screens > 768px)
-  html += `
-    <div class="table-responsive desktop-only-table">
-      <table class="data-table">
-        <thead>
+  // 2. Render Desktop Table View (Screens > 768px)
+  if (deskContainer) {
+    if (allTx.length === 0) {
+      deskContainer.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📂</div>
+          <h3 class="empty-title">${t('noTransactionsYet')}</h3>
+          <p class="empty-desc">${t('noTransactionsDesc')}</p>
+        </div>
+      `;
+    } else {
+      let deskHtml = `
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>${t('colDate')}</th>
+                <th>${t('colType')}</th>
+                <th>${t('colCategory')}</th>
+                <th>${t('colDescription')}</th>
+                <th>${t('colAccount')}</th>
+                <th class="text-right">${t('colAmount')}</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      allTx.forEach(tx => {
+        const cat = cachedCatMap[tx.categoryId];
+        const acc = cachedAccMap[tx.accountId];
+        const catName = cat ? t(cat.nameKey, cat.name) : tx.categoryId;
+        const accName = acc ? t(acc.nameKey, acc.name) : tx.accountId;
+        const isIncome = tx.type === 'income';
+
+        deskHtml += `
           <tr>
-            <th>${t('colDate')}</th>
-            <th>${t('colType')}</th>
-            <th>${t('colCategory')}</th>
-            <th>${t('colDescription')}</th>
-            <th>${t('colAccount')}</th>
-            <th class="text-right">${t('colAmount')}</th>
+            <td>${formatDate(tx.date)}</td>
+            <td><span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">${isIncome ? t('typeIncome') : t('typeExpense')}</span></td>
+            <td>${cat?.icon || ''} ${catName}</td>
+            <td class="cell-desc">${tx.description || '-'}</td>
+            <td>${accName}</td>
+            <td class="text-right font-bold ${isIncome ? 'text-success' : 'text-danger'}">
+              ${isIncome ? '+' : '-'}${formatMoney(tx.amountPaisa)}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-  `;
+        `;
+      });
 
-  allTx.forEach(tx => {
-    const cat = cachedCatMap[tx.categoryId];
-    const acc = cachedAccMap[tx.accountId];
-    const catName = cat ? t(cat.nameKey, cat.name) : tx.categoryId;
-    const accName = acc ? t(acc.nameKey, acc.name) : tx.accountId;
-    const isIncome = tx.type === 'income';
-
-    html += `
-      <tr>
-        <td>${formatDate(tx.date)}</td>
-        <td><span class="badge ${isIncome ? 'badge-income' : 'badge-expense'}">${isIncome ? t('typeIncome') : t('typeExpense')}</span></td>
-        <td>${cat?.icon || ''} ${catName}</td>
-        <td class="cell-desc">${tx.description || '-'}</td>
-        <td>${accName}</td>
-        <td class="text-right font-bold ${isIncome ? 'text-success' : 'text-danger'}">
-          ${isIncome ? '+' : '-'}${formatMoney(tx.amountPaisa)}
-        </td>
-      </tr>
-    `;
-  });
-
-  html += `
-        </tbody>
-      </table>
-    </div>
-  `;
-
-  txContainer.innerHTML = html;
+      deskHtml += `
+            </tbody>
+          </table>
+        </div>
+      `;
+      deskContainer.innerHTML = deskHtml;
+    }
+  }
 }
 
 function renderCategoryBreakdownView(metrics, catMap) {
