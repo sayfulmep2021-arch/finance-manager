@@ -46,6 +46,7 @@
     width: 100% !important;
     max-width: 100vw !important;
     min-height: 100vh !important;
+    min-height: 100dvh !important;
     overflow-x: hidden !important;
     background-color: #f8fafc !important;
   }
@@ -124,7 +125,7 @@
 
   /* View container with safe padding above bottom navigation */
   .view-container {
-    padding: 12px 16px 115px 16px !important;
+    padding: 12px 16px max(115px, calc(95px + env(safe-area-inset-bottom, 0px))) 16px !important;
     max-width: 100vw !important;
     width: 100% !important;
     overflow-x: hidden !important;
@@ -138,7 +139,7 @@
   .mobile-app-header {
     justify-content: space-between;
     align-items: center;
-    padding: 10px 2px 16px 2px;
+    padding: max(14px, env(safe-area-inset-top, 0px)) 2px 16px 2px;
     background: transparent;
   }
 
@@ -247,8 +248,8 @@
     background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
     border: 1px solid #e0f2fe;
     border-radius: 24px;
-    padding: 20px;
-    margin-bottom: 18px;
+    padding: 22px 20px;
+    margin-bottom: 20px;
     box-shadow: 0 4px 18px rgba(2, 132, 199, 0.06);
     position: relative;
     box-sizing: border-box;
@@ -262,7 +263,7 @@
   }
 
   .wallet-sublabel {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #334155;
     font-weight: 700;
   }
@@ -275,7 +276,7 @@
   }
 
   .wallet-balance-val {
-    font-size: 2.15rem;
+    font-size: 2.35rem;
     font-weight: 900;
     color: #0f172a;
     line-height: 1.1;
@@ -288,16 +289,16 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 12px;
+    margin-top: 14px;
   }
 
   .wallet-badge-pill {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    border-radius: 18px;
-    font-size: 0.82rem;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     font-weight: 700;
   }
 
@@ -307,15 +308,15 @@
   }
 
   .wallet-badge-income .badge-circle {
-    width: 17px;
-    height: 17px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: #16a34a;
     color: #ffffff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 800;
   }
 
@@ -325,45 +326,45 @@
   }
 
   .wallet-badge-expense .badge-circle {
-    width: 17px;
-    height: 17px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: #dc2626;
     color: #ffffff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 800;
   }
 
   /* Circular Progress Ring matching reference image */
   .wallet-circular-ring {
-    width: 82px;
-    height: 82px;
-    min-width: 82px;
-    max-width: 82px;
+    width: 86px;
+    height: 86px;
+    min-width: 86px;
+    max-width: 86px;
     position: relative;
     flex-shrink: 0;
   }
 
   .wallet-circular-ring svg {
     transform: rotate(-90deg);
-    width: 82px;
-    height: 82px;
+    width: 86px;
+    height: 86px;
     display: block;
   }
 
   .ring-bg {
     fill: none !important;
     stroke: #e0f2fe;
-    stroke-width: 6;
+    stroke-width: 6.5;
   }
 
   .ring-fg {
     fill: none !important;
     stroke: #0284c7;
-    stroke-width: 6;
+    stroke-width: 6.5;
     stroke-linecap: round;
     transition: stroke-dashoffset 0.6s ease;
   }
@@ -382,7 +383,7 @@
   }
 
   .ring-subtext {
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     color: #64748b;
     font-weight: 600;
     line-height: 1;
@@ -390,7 +391,7 @@
   }
 
   .ring-pct-text {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 900;
     color: #0f172a;
     line-height: 1;
@@ -402,19 +403,20 @@
   .mobile-accounts-grid {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     box-sizing: border-box;
   }
 
   .mobile-account-card {
     background: #ffffff;
     border: 1px solid #f1f5f9;
-    border-radius: 18px;
-    padding: 13px 15px;
+    border-radius: 20px;
+    padding: 14px 16px;
+    min-height: 74px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
     transition: transform 0.15s, box-shadow 0.15s;
     text-decoration: none;
@@ -427,13 +429,13 @@
   }
 
   .account-card-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     flex-shrink: 0;
   }
 
@@ -457,7 +459,7 @@
   }
 
   .account-card-name {
-    font-size: 0.82rem;
+    font-size: 0.86rem;
     font-weight: 600;
     color: #64748b;
     display: block;
@@ -467,7 +469,7 @@
   }
 
   .account-card-val {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     font-weight: 800;
     color: #0f172a;
     display: block;
@@ -481,19 +483,19 @@
   .mobile-toggle-wrapper {
     background: #f1f5f9;
     border-radius: 16px;
-    padding: 4px;
-    gap: 4px;
-    margin-bottom: 20px;
+    padding: 5px;
+    gap: 6px;
+    margin-bottom: 22px;
     box-sizing: border-box;
   }
 
   .toggle-tab-btn {
     flex: 1;
-    padding: 12px 16px;
+    padding: 13px 18px;
     border: none;
     border-radius: 12px;
     background: transparent;
-    font-size: 1.05rem;
+    font-size: 1.08rem;
     font-weight: 700;
     color: #64748b;
     cursor: pointer;
@@ -522,12 +524,12 @@
   .mobile-section-header {
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     padding: 0 4px;
   }
 
   .mobile-section-title {
-    font-size: 1.15rem;
+    font-size: 1.18rem;
     font-weight: 800;
     color: #0f172a;
   }
@@ -542,15 +544,15 @@
 
   .mobile-tx-list-container {
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     box-sizing: border-box;
   }
 
   .mobile-tx-item {
     background: #ffffff;
     border: 1px solid #f1f5f9;
-    border-radius: 18px;
-    padding: 14px 16px;
+    border-radius: 20px;
+    padding: 15px 16px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     display: flex;
     align-items: center;
@@ -573,13 +575,13 @@
   }
 
   .mobile-tx-icon-badge {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.35rem;
+    font-size: 1.45rem;
     flex-shrink: 0;
   }
 
@@ -588,7 +590,7 @@
   }
 
   .mobile-tx-title {
-    font-size: 0.98rem;
+    font-size: 1.02rem;
     font-weight: 700;
     color: #0f172a;
     display: block;
@@ -598,14 +600,14 @@
   }
 
   .mobile-tx-sub {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     color: #64748b;
     display: block;
     margin-top: 2px;
   }
 
   .mobile-tx-amount {
-    font-size: 1.15rem;
+    font-size: 1.22rem;
     font-weight: 800;
     color: #0f172a;
     white-space: nowrap;
@@ -617,19 +619,19 @@
   .mobile-fab {
     position: fixed !important;
     right: 20px !important;
-    bottom: 84px !important;
+    bottom: max(88px, calc(78px + env(safe-area-inset-bottom, 0px))) !important;
     left: auto !important;
     transform: none !important;
-    width: 54px !important;
-    height: 54px !important;
+    width: 56px !important;
+    height: 56px !important;
     border-radius: 50% !important;
     background: #0284c7 !important;
     color: #ffffff !important;
     border: none !important;
-    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.45) !important;
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45) !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 1.6rem !important;
+    font-size: 1.65rem !important;
     cursor: pointer !important;
     z-index: 990 !important;
     transition: transform 0.15s ease, box-shadow 0.15s ease !important;
@@ -646,14 +648,14 @@
     left: 0 !important;
     right: 0 !important;
     width: 100vw !important;
-    height: 64px !important;
+    height: 70px !important;
     background-color: #ffffff !important;
     border-top: 1px solid #f1f5f9 !important;
     align-items: center !important;
     justify-content: space-around !important;
     z-index: 985 !important;
     box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04) !important;
-    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)) !important;
     box-sizing: border-box !important;
   }
 
@@ -669,23 +671,32 @@
     flex: 1 !important;
     height: 100% !important;
     transition: color 0.15s ease !important;
-    padding: 6px 0 !important;
+    padding: 4px 0 !important;
+    gap: 3px !important;
     -webkit-tap-highlight-color: transparent !important;
   }
 
   .bnav-item.active {
     color: #0284c7 !important;
+    font-weight: 700 !important;
   }
 
   .bnav-item.active .bnav-icon {
-    transform: scale(1.1) !important;
+    background: #e0f2fe !important;
+    border-radius: 16px !important;
+    padding: 2px 14px !important;
+    transform: scale(1.05) !important;
   }
 
   .bnav-icon {
     font-size: 1.35rem !important;
-    line-height: 1 !important;
-    margin-bottom: 2px !important;
-    transition: transform 0.15s ease !important;
+    line-height: 1.2 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    padding: 2px 8px !important;
+    border-radius: 16px !important;
   }
 
   .bnav-label {

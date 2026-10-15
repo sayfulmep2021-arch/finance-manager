@@ -1,6 +1,6 @@
 // Service Worker for Personal Finance Manager - Smart Offline Edition
-// Version: pfm-offline-v11 (Full-screen native mobile UI with English bottom navigation)
-const CACHE_NAME = 'pfm-offline-v11';
+// Version: pfm-offline-v12 (Redmi Turbo 4 Pro native scaling, edge-to-edge status bar)
+const CACHE_NAME = 'pfm-offline-v12';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

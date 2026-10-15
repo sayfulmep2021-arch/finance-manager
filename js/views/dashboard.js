@@ -135,8 +135,8 @@ export async function renderDashboard(container) {
         </div>
 
         <!-- Circular Progress Ring (Zero-Cost SVG Ring with Spent %) -->
-        <div class="wallet-circular-ring" id="wallet-progress-container" title="খরচের শতকরা হার" style="width: 82px; height: 82px; min-width: 82px; max-width: 82px; position: relative; flex-shrink: 0;">
-          <svg viewBox="0 0 80 80" style="transform: rotate(-90deg); width: 82px; height: 82px; display: block;">
+        <div class="wallet-circular-ring" id="wallet-progress-container" title="খরচের শতকরা হার">
+          <svg viewBox="0 0 80 80">
             <circle class="ring-bg" cx="40" cy="40" r="32" fill="none" stroke="#e0f2fe" stroke-width="6"></circle>
             <circle class="ring-fg" id="wallet-ring-fg" cx="40" cy="40" r="32" fill="none" stroke="#0284c7" stroke-width="6" stroke-linecap="round" stroke-dasharray="201.06" stroke-dashoffset="201.06"></circle>
           </svg>
