@@ -18,12 +18,32 @@ import { renderAssistantView } from './views/assistant.js';
 import { renderBackupView } from './views/backup.js';
 import { renderSettingsView } from './views/settings.js';
 
-// Register Service Worker for 100% offline functionality
+// Register Service Worker for 100% offline functionality with auto-update
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('Service Worker registered successfully'))
-      .catch(err => console.warn('Service Worker registration skipped/failed:', err));
+      .then(reg => {
+        console.log('[SW] Registered successfully');
+        // Check for updates on every load
+        reg.update();
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                const banner = document.getElementById('mobile-update-banner');
+                if (banner) banner.classList.remove('hidden');
+              }
+            });
+          }
+        });
+      })
+      .catch(err => console.warn('[SW] Registration failed:', err));
+  });
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    console.log('[SW] Controller changed. Auto reloading...');
+    window.location.reload();
   });
 }
 
@@ -142,18 +162,39 @@ export async function navigateTo(route) {
   }
 }
 
-// Update MIS Status indicator badge in the top navbar
+// Update MIS Status indicator badge in the top navbar and mobile modal
 export async function updateMISBadge() {
   const badge = document.getElementById('mis-status-badge');
-  if (!badge) return;
+  const mobMisStatus = document.getElementById('mob-notif-mis-status');
+  const mobLangDisplay = document.getElementById('mob-notif-lang-display');
+  const profileName = document.getElementById('profile-sheet-name');
 
   const status = await getMISStatus();
   if (status.isConfigured) {
-    badge.textContent = `🔒 ${t('misStatusActive')}`;
-    badge.className = 'status-badge badge-active';
+    if (badge) {
+      badge.textContent = `🔒 ${t('misStatusActive')}`;
+      badge.className = 'status-badge badge-active';
+    }
+    if (mobMisStatus) {
+      mobMisStatus.textContent = `🔒 ${t('misStatusActive')}`;
+      mobMisStatus.style.color = '#16a34a';
+    }
   } else {
-    badge.textContent = `⚠️ ${t('misStatusInactive')}`;
-    badge.className = 'status-badge badge-inactive';
+    if (badge) {
+      badge.textContent = `⚠️ ${t('misStatusInactive')}`;
+      badge.className = 'status-badge badge-inactive';
+    }
+    if (mobMisStatus) {
+      mobMisStatus.textContent = `⚠️ ${t('misStatusInactive')}`;
+      mobMisStatus.style.color = '#eab308';
+    }
+  }
+
+  if (mobLangDisplay) {
+    mobLangDisplay.textContent = getLanguage() === 'bn' ? 'বাংলা (BN)' : 'English (EN)';
+  }
+  if (profileName) {
+    profileName.textContent = localStorage.getItem('pfm_user_name') || 'Shaikat';
   }
 }
 
@@ -295,6 +336,99 @@ async function initApp() {
       window.location.hash = '#accounts';
     });
   }
+
+  // Mobile One-Tap Update Banner button
+  const btnApplyUpdate = document.getElementById('btn-apply-update');
+  if (btnApplyUpdate) {
+    btnApplyUpdate.addEventListener('click', () => {
+      window.location.reload();
+    });
+  }
+
+  // Force Reload and Clear Cache Handler
+  async function forceReloadAndClearCache() {
+    if (confirm('আপনি কি অফলাইন ক্যাশ পরিষ্কার করে নতুন সংস্করণ রিলোড করতে চান?')) {
+      try {
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (let r of regs) { await r.unregister(); }
+        }
+      } catch (e) {
+        console.warn('Error clearing cache:', e);
+      }
+      window.location.href = window.location.pathname + '?forceUpdate=' + Date.now();
+    }
+  }
+
+  const btnForceReload1 = document.getElementById('btn-force-reload-cache');
+  const btnForceReload2 = document.getElementById('btn-sheet-force-reload');
+  if (btnForceReload1) btnForceReload1.addEventListener('click', forceReloadAndClearCache);
+  if (btnForceReload2) btnForceReload2.addEventListener('click', forceReloadAndClearCache);
+
+  // Mobile Notification & Status Modal Handlers (🔔)
+  const notifModal = document.getElementById('mobile-notifications-modal');
+  const notifClose = document.getElementById('mobile-notif-close');
+  if (notifClose && notifModal) {
+    notifClose.addEventListener('click', () => notifModal.classList.add('hidden'));
+    notifModal.addEventListener('click', (e) => {
+      if (e.target === notifModal) notifModal.classList.add('hidden');
+    });
+  }
+
+  const mobNotifBtnMis = document.getElementById('mob-notif-btn-mis');
+  if (mobNotifBtnMis) {
+    mobNotifBtnMis.addEventListener('click', () => {
+      if (notifModal) notifModal.classList.add('hidden');
+      openMISSetupModal();
+    });
+  }
+
+  const mobNotifBtnLang = document.getElementById('mob-notif-btn-lang');
+  if (mobNotifBtnLang) {
+    mobNotifBtnLang.addEventListener('click', async () => {
+      const next = getLanguage() === 'bn' ? 'en' : 'bn';
+      setLanguage(next);
+      updateStaticTranslations();
+      await updateMISBadge();
+      await navigateTo(currentRoute);
+      if (notifModal) notifModal.classList.add('hidden');
+    });
+  }
+
+  // Mobile Profile Sheet Handlers (👤)
+  const profileModal = document.getElementById('mobile-profile-modal');
+  const profileClose = document.getElementById('mobile-profile-close');
+  if (profileClose && profileModal) {
+    profileClose.addEventListener('click', () => profileModal.classList.add('hidden'));
+    profileModal.addEventListener('click', (e) => {
+      if (e.target === profileModal) profileModal.classList.add('hidden');
+    });
+  }
+
+  const btnEditProfileName = document.getElementById('btn-edit-profile-name');
+  if (btnEditProfileName) {
+    btnEditProfileName.addEventListener('click', () => {
+      const current = localStorage.getItem('pfm_user_name') || 'Shaikat';
+      const next = prompt('আপনার নাম লিখুন / Enter your name:', current);
+      if (next && next.trim()) {
+        localStorage.setItem('pfm_user_name', next.trim());
+        const sheetName = document.getElementById('profile-sheet-name');
+        if (sheetName) sheetName.textContent = next.trim();
+        const headerName = document.getElementById('user-display-name');
+        if (headerName) headerName.textContent = next.trim();
+      }
+    });
+  }
+
+  document.querySelectorAll('[data-sheet-nav]').forEach(item => {
+    item.addEventListener('click', () => {
+      if (profileModal) profileModal.classList.add('hidden');
+    });
+  });
 
   // Hash change router listener
   window.addEventListener('hashchange', () => {

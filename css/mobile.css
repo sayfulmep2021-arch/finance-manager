@@ -1,58 +1,86 @@
 /* Mobile & Tablet Responsive Optimizations */
 /* Personal Finance Manager — Smart Offline Edition */
-/* Pixel-Perfect Alignment with Reference Mobile UI */
+/* Pixel-Perfect Alignment with Reference Mobile Fintech UI */
 
 /* ==========================================================================
-   1. DESKTOP VIEW GUARD (Screens > 768px)
+   1. DESKTOP VIEW GUARD (True Desktop Screens: > 1024px with mouse pointer)
    Ensure 100% desktop fidelity; hide mobile-only components completely
    ========================================================================== */
-@media (min-width: 769px) {
-  .mobile-app-header,
-  .mobile-wallet-card,
-  .mobile-accounts-grid,
-  .mobile-toggle-wrapper,
-  .mobile-section-header,
-  .mobile-tx-list-container,
-  .mobile-fab,
-  .mobile-bottom-nav,
-  #mobile-quick-add-modal,
-  .mobile-only {
+@media (min-width: 1025px) and (hover: hover) and (pointer: fine) {
+  html:not(.is-mobile-device) .mobile-app-header,
+  html:not(.is-mobile-device) .mobile-wallet-card,
+  html:not(.is-mobile-device) .mobile-accounts-grid,
+  html:not(.is-mobile-device) .mobile-toggle-wrapper,
+  html:not(.is-mobile-device) .mobile-section-header,
+  html:not(.is-mobile-device) .mobile-tx-list-container,
+  html:not(.is-mobile-device) .mobile-fab,
+  html:not(.is-mobile-device) .mobile-bottom-nav,
+  html:not(.is-mobile-device) #mobile-quick-add-modal,
+  html:not(.is-mobile-device) #mobile-notifications-modal,
+  html:not(.is-mobile-device) #mobile-profile-modal,
+  html:not(.is-mobile-device) #mobile-update-banner,
+  html:not(.is-mobile-device) .mobile-only {
     display: none !important;
   }
 
-  .desktop-kpi-grid {
+  html:not(.is-mobile-device) .desktop-kpi-grid {
     display: grid !important;
   }
 
-  .desktop-only-grid {
+  html:not(.is-mobile-device) .desktop-only-grid {
     display: grid !important;
   }
 
-  .desktop-only-table {
+  html:not(.is-mobile-device) .desktop-only-table {
     display: block !important;
   }
 }
 
-/* Tablet adjustments (769px to 900px) */
-@media (max-width: 900px) and (min-width: 769px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .toolbar-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .search-box {
-    grid-column: 1 / -1;
-  }
-}
-
 /* ==========================================================================
-   2. MOBILE VIEW (Screens <= 768px)
-   Matches Reference Image Pixel-for-Pixel: Premium Fintech App UI
+   2. MOBILE & TOUCH DEVICE SHELL OVERRIDES
+   Guarantees mobile view triggers even on high-DPI or "Desktop Site" mode
    ========================================================================== */
-@media (max-width: 768px) {
+html.is-mobile-device .app-container,
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  .app-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+  }
+
+  .app-sidebar {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    height: 100vh !important;
+    transform: translateX(-100%) !important;
+    box-shadow: var(--shadow-lg) !important;
+    z-index: 1000 !important;
+    transition: transform 0.25s ease !important;
+    display: flex !important;
+  }
+
+  .app-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .app-main {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    display: block !important;
+    overflow-x: hidden !important;
+  }
+
+  /* In mobile mode, hide desktop header; mobile greeting header takes over */
+  .app-header {
+    display: none !important;
+  }
+
   /* Hide Desktop Elements on Mobile */
   .view-header,
   .desktop-kpi-grid,
@@ -61,55 +89,54 @@
     display: none !important;
   }
 
-  /* Layout & Navigation */
-  .mobile-toggle {
-    display: block;
+  /* Ensure Mobile Components are Displayed */
+  .mobile-app-header {
+    display: flex !important;
   }
 
-  .app-sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    transform: translateX(-100%);
-    box-shadow: var(--shadow-lg);
-    z-index: 1000;
+  .mobile-wallet-card {
+    display: block !important;
   }
 
-  .app-sidebar.open {
-    transform: translateX(0);
+  .mobile-accounts-grid {
+    display: grid !important;
   }
 
-  .app-header {
-    padding: 0 14px;
-    height: 52px;
+  .mobile-toggle-wrapper {
+    display: flex !important;
   }
 
-  .brand-title {
-    font-size: 0.95rem;
+  .mobile-section-header {
+    display: flex !important;
   }
 
-  .status-badge {
-    font-size: 0.72rem;
-    padding: 3px 6px;
+  .mobile-tx-list-container {
+    display: flex !important;
+  }
+
+  .mobile-fab {
+    display: flex !important;
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
   }
 
   /* Main Viewport Container with Bottom Nav clearance */
   .view-container {
-    padding: 10px 14px 105px 14px !important;
-    max-width: 100vw;
-    overflow-x: hidden;
-    background-color: var(--bg-main);
+    padding: 10px 16px 110px 16px !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    background-color: #f8fafc !important;
   }
 
   /* ==========================================================================
      3. MOBILE APP HEADER (Greeting & Profile Avatar)
      ========================================================================== */
   .mobile-app-header {
-    display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 2px 14px 2px;
+    padding: 12px 2px 16px 2px;
     background: transparent;
   }
 
@@ -119,19 +146,22 @@
   }
 
   .mobile-greeting-sub {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: #64748b;
     font-weight: 500;
     line-height: 1.2;
   }
 
   .mobile-greeting-name {
-    font-size: 1.45rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: #0f172a;
     line-height: 1.2;
     margin-top: 2px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .mobile-header-right {
@@ -141,23 +171,29 @@
   }
 
   .mobile-bell-btn {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: #ffffff;
     border: 1px solid #f1f5f9;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     color: #0f172a;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-bell-btn:active {
+    transform: scale(0.95);
   }
 
   .mobile-avatar-circle {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid #ffffff;
@@ -167,12 +203,43 @@
     align-items: center;
     justify-content: center;
     background: #0284c7;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-avatar-circle:active {
+    transform: scale(0.95);
   }
 
   .avatar-svg {
     display: block;
     width: 100%;
     height: 100%;
+  }
+
+  /* One-Tap Update Banner */
+  .mobile-update-banner {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: #1e40af;
+    font-weight: 600;
+  }
+
+  .btn-update-pill {
+    background: #0284c7;
+    color: #ffffff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
   }
 
   /* ==========================================================================
@@ -331,7 +398,6 @@
      5. ACCOUNT CARDS (2-Column Grid matching EBL & Bkash)
      ========================================================================== */
   .mobile-accounts-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-bottom: 18px;
@@ -349,6 +415,7 @@
     cursor: pointer;
     transition: transform 0.15s, box-shadow 0.15s;
     text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .mobile-account-card:active {
@@ -411,7 +478,6 @@
     background: #f1f5f9;
     border-radius: 16px;
     padding: 4px;
-    display: flex;
     gap: 4px;
     margin-bottom: 20px;
   }
@@ -449,7 +515,6 @@
      7. RECENT TRANSACTIONS HEADER & LIST (Matching Cards in Image)
      ========================================================================== */
   .mobile-section-header {
-    display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
@@ -471,7 +536,6 @@
   }
 
   .mobile-tx-list-container {
-    display: flex;
     flex-direction: column;
     gap: 10px;
   }
@@ -544,80 +608,81 @@
      8. FLOATING ACTION BUTTON (FAB) & BOTTOM NAVIGATION
      ========================================================================== */
   .mobile-fab {
-    position: fixed;
-    right: 20px;
-    bottom: 84px;
-    left: auto;
-    transform: none;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: #0284c7;
-    color: #ffffff;
-    border: none;
-    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.6rem;
-    cursor: pointer;
-    z-index: 990;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
+    position: fixed !important;
+    right: 20px !important;
+    bottom: 84px !important;
+    left: auto !important;
+    transform: none !important;
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 50% !important;
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.45) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.6rem !important;
+    cursor: pointer !important;
+    z-index: 990 !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    -webkit-tap-highlight-color: transparent !important;
   }
 
   .mobile-fab:active {
-    transform: scale(0.92);
+    transform: scale(0.92) !important;
   }
 
   .mobile-bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 66px;
-    background-color: #ffffff;
-    border-top: 1px solid #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    z-index: 985;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    height: 64px !important;
+    background-color: #ffffff !important;
+    border-top: 1px solid #f1f5f9 !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    z-index: 985 !important;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04) !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
   }
 
   .bnav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: #64748b;
-    font-size: 0.72rem;
-    font-weight: 600;
-    flex: 1;
-    height: 100%;
-    transition: color 0.15s ease;
-    padding: 6px 0;
-    -webkit-tap-highlight-color: transparent;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    color: #64748b !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    flex: 1 !important;
+    height: 100% !important;
+    transition: color 0.15s ease !important;
+    padding: 6px 0 !important;
+    -webkit-tap-highlight-color: transparent !important;
   }
 
   .bnav-item.active {
-    color: #0284c7;
+    color: #0284c7 !important;
   }
 
   .bnav-item.active .bnav-icon {
-    transform: scale(1.08);
+    transform: scale(1.08) !important;
   }
 
   .bnav-icon {
-    font-size: 1.35rem;
-    line-height: 1;
-    margin-bottom: 3px;
-    transition: transform 0.15s ease;
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+    margin-bottom: 2px !important;
+    transition: transform 0.15s ease !important;
   }
 
-  /* Quick Action Sheet Modal */
+  /* ==========================================================================
+     9. QUICK ACTION SHEET & MODAL BOTTOM DRAWERS
+     ========================================================================== */
   .quick-action-sheet {
     background: var(--bg-surface);
     width: 100%;
@@ -653,10 +718,10 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 14px;
-    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    border-radius: 16px;
     border: 1px solid var(--border);
-    background-color: var(--bg-surface);
+    background-color: #ffffff;
     cursor: pointer;
     text-align: left;
     transition: background-color 0.15s;
@@ -668,13 +733,13 @@
   }
 
   .qa-btn-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: var(--radius-md);
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
+    font-size: 1.35rem;
     flex-shrink: 0;
   }
 
@@ -685,14 +750,112 @@
   .qa-btn-title {
     display: block;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-main);
   }
 
   .qa-btn-desc {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
+  }
+
+  /* Notifications & Status Sheet Items */
+  .notif-card-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .notif-card-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .notif-card-icon {
+    font-size: 1.4rem;
+  }
+
+  .notif-card-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #0f172a;
+  }
+
+  .notif-card-sub {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 1px;
+  }
+
+  /* Profile Sheet Items */
+  .profile-header-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+
+  .profile-name-text {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .btn-link-sm {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #0284c7;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .profile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .profile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    color: #1e293b;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .profile-menu-item:active {
+    background: #f1f5f9;
+  }
+
+  .btn-menu-reload {
+    width: 100%;
+    border: 1px dashed #0284c7;
+    color: #0284c7;
+    background: #f0f9ff;
+    font-family: inherit;
+    text-align: left;
+    margin-top: 6px;
   }
 
   /* Form & Table Mobile Responsiveness */

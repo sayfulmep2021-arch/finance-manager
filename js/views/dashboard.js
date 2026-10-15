@@ -252,12 +252,21 @@ export async function renderDashboard(container) {
     });
   }
 
-  // Bell icon click
+  // Bell icon click -> opens notification & status modal
   const bellBtn = document.getElementById('mobile-bell-btn');
   if (bellBtn) {
     bellBtn.addEventListener('click', () => {
-      const badge = document.getElementById('mis-status-badge');
-      if (badge) badge.click();
+      const modal = document.getElementById('mobile-notifications-modal');
+      if (modal) modal.classList.remove('hidden');
+    });
+  }
+
+  // Avatar icon click -> opens profile & module menu modal
+  const avatarBtn = document.getElementById('mobile-avatar-btn');
+  if (avatarBtn) {
+    avatarBtn.addEventListener('click', () => {
+      const modal = document.getElementById('mobile-profile-modal');
+      if (modal) modal.classList.remove('hidden');
     });
   }
 
@@ -384,16 +393,30 @@ async function updateDashboardData() {
   const accountsGrid = document.getElementById('mobile-accounts-grid');
   if (accountsGrid) {
     let accHtml = '';
-    // Show user accounts (e.g. Bank and bKash/Mobile wallet)
-    accounts.forEach(acc => {
+    const displayAccounts = accounts.length > 0 ? accounts : [
+      { id: 'acc_bank', name: 'EBL', type: 'bank', balancePaisa: 0 },
+      { id: 'acc_mfs', name: 'Bkash', type: 'mfs', balancePaisa: 0 }
+    ];
+
+    displayAccounts.slice(0, 2).forEach(acc => {
       let icon = '🏦';
       let iconClass = 'icon-bank';
       const type = (acc.type || '').toLowerCase();
       const id = (acc.id || '').toLowerCase();
+      let accName = acc.name || t(acc.nameKey, acc.id);
 
-      if (type.includes('mobile') || id.includes('bkash') || id.includes('nagad')) {
+      if (type.includes('mobile') || id.includes('bkash') || id.includes('mfs') || id.includes('nagad')) {
         icon = '📱';
         iconClass = 'icon-bkash';
+        if (!acc.name || acc.name === 'acc_mfs' || acc.name === 'বিকাশ / নগদ') {
+          accName = 'Bkash';
+        }
+      } else if (type.includes('bank') || id.includes('bank')) {
+        icon = '🏦';
+        iconClass = 'icon-bank';
+        if (!acc.name || acc.name === 'acc_bank' || acc.name === 'ব্যাংক অ্যাকাউন্ট') {
+          accName = 'EBL';
+        }
       } else if (type.includes('cash') || id.includes('cash')) {
         icon = '💵';
         iconClass = 'icon-cash';
@@ -403,8 +426,8 @@ async function updateDashboardData() {
         <div class="mobile-account-card" onclick="window.location.hash='#accounts'">
           <div class="account-card-icon ${iconClass}">${icon}</div>
           <div class="account-card-info">
-            <span class="account-card-name">${t(acc.nameKey, acc.name || acc.id)}</span>
-            <span class="account-card-val">${formatMoney(acc.balancePaisa || 0)}</span>
+            <span class="account-card-name">${accName}</span>
+            <span class="account-card-val">${formatMoney(acc.current_balance_paisa || acc.balancePaisa || 0)}</span>
           </div>
         </div>
       `;
@@ -436,13 +459,95 @@ function renderRecentTransactionsView() {
   // 1. Render Mobile Card List matching the Screenshot
   if (mobContainer) {
     if (filteredTx.length === 0) {
-      mobContainer.innerHTML = `
-        <div style="background: #ffffff; border: 1px solid #f1f5f9; border-radius: 18px; padding: 24px; text-align: center; color: #64748b;">
-          <p style="margin: 0; font-size: 0.9rem;">
-            ${activeMobileTab === 'expense' ? 'নির্বাচিত সময়ে কোনো ব্যয়ের রেকর্ড নেই' : 'নির্বাচিত সময়ে কোনো আয়ের রেকর্ড নেই'}
-          </p>
-        </div>
-      `;
+      if (activeMobileTab === 'expense') {
+        mobContainer.innerHTML = `
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 16px; margin-bottom: 8px; text-align: center;">
+            <p style="margin: 0 0 10px 0; font-size: 0.88rem; color: #64748b; font-weight: 600;">
+              এখনো কোনো ব্যয়ের রেকর্ড যুক্ত করা হয়নি
+            </p>
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.location.hash='#expenses'" style="margin: 0 auto; display: inline-flex; align-items: center; gap: 6px;">
+              <span>➕</span> <span>নতুন ব্যয় যোগ করুন</span>
+            </button>
+          </div>
+          <div style="font-size: 0.76rem; color: #94a3b8; font-weight: 600; padding: 2px 4px 6px;">
+            নমুনা লেআউট প্রিভিউ (Demo Preview):
+          </div>
+          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#expenses'">
+            <div class="mobile-tx-left">
+              <div class="mobile-tx-icon-badge" style="background-color: #fff7ed; color: #ea580c; border: 1px solid #ffedd5;">☕</div>
+              <div class="mobile-tx-details">
+                <span class="mobile-tx-title">বন্ধুদের সাথে চা</span>
+                <span class="mobile-tx-sub">আজ</span>
+              </div>
+            </div>
+            <div class="mobile-tx-amount">৳১৬০</div>
+          </div>
+          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#expenses'">
+            <div class="mobile-tx-left">
+              <div class="mobile-tx-icon-badge" style="background-color: #f5f3ff; color: #7c3aed; border: 1px solid #ede9fe;">🐟</div>
+              <div class="mobile-tx-details">
+                <span class="mobile-tx-title">মাছ</span>
+                <span class="mobile-tx-sub">আজ</span>
+              </div>
+            </div>
+            <div class="mobile-tx-amount">৳১,৫০০</div>
+          </div>
+          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#expenses'">
+            <div class="mobile-tx-left">
+              <div class="mobile-tx-icon-badge" style="background-color: #fdf2f8; color: #db2777; border: 1px solid #fce7f3;">🧴</div>
+              <div class="mobile-tx-details">
+                <span class="mobile-tx-title">শ্যাম্পু</span>
+                <span class="mobile-tx-sub">গতকাল</span>
+              </div>
+            </div>
+            <div class="mobile-tx-amount">৳৪০</div>
+          </div>
+          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#expenses'">
+            <div class="mobile-tx-left">
+              <div class="mobile-tx-icon-badge" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fee2e2;">📷</div>
+              <div class="mobile-tx-details">
+                <span class="mobile-tx-title">Google ai pro</span>
+                <span class="mobile-tx-sub">গতকাল</span>
+              </div>
+            </div>
+            <div class="mobile-tx-amount">৳২৫০</div>
+          </div>
+        `;
+      } else {
+        mobContainer.innerHTML = `
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 16px; margin-bottom: 8px; text-align: center;">
+            <p style="margin: 0 0 10px 0; font-size: 0.88rem; color: #64748b; font-weight: 600;">
+              এখনো কোনো আয়ের রেকর্ড যুক্ত করা হয়নি
+            </p>
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.location.hash='#income'" style="margin: 0 auto; display: inline-flex; align-items: center; gap: 6px;">
+              <span>➕</span> <span>নতুন আয় যোগ করুন</span>
+            </button>
+          </div>
+          <div style="font-size: 0.76rem; color: #94a3b8; font-weight: 600; padding: 2px 4px 6px;">
+            নমুনা লেআউট প্রিভিউ (Demo Preview):
+          </div>
+          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#income'">
+            <div class="mobile-tx-left">
+              <div class="mobile-tx-icon-badge" style="background-color: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7;">💰</div>
+              <div class="mobile-tx-details">
+                <span class="mobile-tx-title">মাসিক বেতন</span>
+                <span class="mobile-tx-sub">আজ</span>
+              </div>
+            </div>
+            <div class="mobile-tx-amount text-success">+৳৭০,০০০</div>
+          </div>
+          <div class="mobile-tx-item" style="opacity: 0.95;" onclick="window.location.hash='#income'">
+            <div class="mobile-tx-left">
+              <div class="mobile-tx-icon-badge" style="background-color: #eff6ff; color: #0284c7; border: 1px solid #dbeafe;">💻</div>
+              <div class="mobile-tx-details">
+                <span class="mobile-tx-title">ফ্রিল্যান্স কাজ</span>
+                <span class="mobile-tx-sub">গতকাল</span>
+              </div>
+            </div>
+            <div class="mobile-tx-amount text-success">+৳১২,৫০০</div>
+          </div>
+        `;
+      }
     } else {
       let mobHtml = '';
       filteredTx.slice(0, 10).forEach(tx => {

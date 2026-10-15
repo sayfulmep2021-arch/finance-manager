@@ -2,19 +2,39 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0284c7">
   <meta name="description" content="Personal Finance Manager — Smart Offline Edition. Secure, private, 100% offline financial tracking in Bengali & English.">
   <title>পার্সোনাল ফাইন্যান্স ম্যানেজার — স্মার্ট অফলাইন সংস্করণ</title>
   
+  <script>
+    (function() {
+      function detectMobile() {
+        var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+        var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        var isSmallScreen = window.innerWidth <= 1024;
+        if (isTouch || isMobileUA || isSmallScreen) {
+          document.documentElement.classList.add('is-mobile-device');
+          if (document.body) document.body.classList.add('is-mobile-device');
+        } else {
+          document.documentElement.classList.remove('is-mobile-device');
+          if (document.body) document.body.classList.remove('is-mobile-device');
+        }
+      }
+      detectMobile();
+      window.addEventListener('resize', detectMobile);
+      document.addEventListener('DOMContentLoaded', detectMobile);
+    })();
+  </script>
+
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Finance Manager">
-  <link rel="stylesheet" href="./css/style.css">
-  <link rel="stylesheet" href="./css/mobile.css">
+  <link rel="stylesheet" href="./css/style.css?v=10">
+  <link rel="stylesheet" href="./css/mobile.css?v=10">
 </head>
 <body>
   <div class="app-container">
@@ -135,14 +155,20 @@
         <span class="fab-icon">➕</span>
       </button>
 
-      <!-- Mobile Fixed Bottom Navigation (Rule: Only displays on screens <= 768px) -->
+      <!-- Mobile One-Tap Update Banner -->
+      <div id="mobile-update-banner" class="mobile-update-banner hidden">
+        <span>⚡ নতুন সংস্করণ প্রস্তুত!</span>
+        <button type="button" id="btn-apply-update" class="btn-update-pill">আপডেট করুন</button>
+      </div>
+
+      <!-- Mobile Fixed Bottom Navigation (Rule: Only displays on mobile) -->
       <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
         <a href="#dashboard" class="bnav-item active" data-bnav="dashboard">
           <span class="bnav-icon">🏠</span>
           <span class="bnav-label" data-i18n="bnavHome">হোম</span>
         </a>
-        <a href="#transactions" class="bnav-item" data-bnav="transactions">
-          <span class="bnav-icon">🗂️</span>
+        <a href="#accounts" class="bnav-item" data-bnav="accounts">
+          <span class="bnav-icon">💳</span>
           <span class="bnav-label" data-i18n="bnavAccounts">হিসাব</span>
         </a>
         <a href="#borrowing" class="bnav-item" data-bnav="borrowing">
@@ -185,6 +211,101 @@
           <span class="qa-btn-title" data-i18n="qaTransfer">ট্রান্সফার</span>
           <span class="qa-btn-desc">হিসাবে স্থানান্তর করুন</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Notification / Status Sheet (Triggered by 🔔) -->
+  <div id="mobile-notifications-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="quick-action-sheet">
+      <div class="quick-sheet-handle"></div>
+      <div class="modal-header" style="padding-bottom: 8px;">
+        <h3 class="modal-title">🔔 <span data-i18n="notifModalTitle">বিজ্ঞপ্তি ও সিস্টেম স্ট্যাটাস</span></h3>
+        <button type="button" class="modal-close" id="mobile-notif-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="notif-card-item">
+          <div class="notif-card-left">
+            <span class="notif-card-icon">🔒</span>
+            <div>
+              <div class="notif-card-title" data-i18n="misSecurityStatus">MIS নিরাপত্তা স্ট্যাটাস</div>
+              <div class="notif-card-sub" id="mob-notif-mis-status">যাচাই করা হচ্ছে...</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-xs" id="mob-notif-btn-mis">কনফিগার</button>
+        </div>
+
+        <div class="notif-card-item">
+          <div class="notif-card-left">
+            <span class="notif-card-icon">🌐</span>
+            <div>
+              <div class="notif-card-title">ভাষা / Language</div>
+              <div class="notif-card-sub" id="mob-notif-lang-display">বাংলা (BN)</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-xs" id="mob-notif-btn-lang">English</button>
+        </div>
+
+        <div class="notif-card-item">
+          <div class="notif-card-left">
+            <span class="notif-card-icon">⚡</span>
+            <div>
+              <div class="notif-card-title">অ্যাপ সংস্করণ (PWA Version)</div>
+              <div class="notif-card-sub">v10 — পিক্সেল পারফেক্ট মোবাইল এডিশন</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary-outline btn-xs" id="btn-force-reload-cache">🔄 রিফ্রেশ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Profile Sheet (Triggered by 👤 Avatar) -->
+  <div id="mobile-profile-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="quick-action-sheet">
+      <div class="quick-sheet-handle"></div>
+      <div class="modal-header" style="padding-bottom: 8px;">
+        <h3 class="modal-title">👤 <span data-i18n="profileModalTitle">ব্যবহারকারী প্রোফাইল ও মেনু</span></h3>
+        <button type="button" class="modal-close" id="mobile-profile-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-header-card">
+          <div class="mobile-avatar-circle" style="width: 50px; height: 50px;">
+            <svg viewBox="0 0 40 40" width="50" height="50" class="avatar-svg">
+              <circle cx="20" cy="20" r="19" fill="#0284c7"/>
+              <circle cx="20" cy="15" r="7" fill="#ffffff"/>
+              <path d="M7 34 C7 25, 33 25, 33 34" fill="#ffffff"/>
+            </svg>
+          </div>
+          <div>
+            <div class="profile-name-text" id="profile-sheet-name">Shaikat</div>
+            <button type="button" class="btn-link-sm" id="btn-edit-profile-name">✏️ নাম পরিবর্তন করুন</button>
+          </div>
+        </div>
+
+        <div class="profile-menu-links">
+          <a href="#transactions" class="profile-menu-item" data-sheet-nav>
+            <span>📑</span> <span>লেনদেন খতিয়ান (Ledger)</span>
+          </a>
+          <a href="#budgets" class="profile-menu-item" data-sheet-nav>
+            <span>🎯</span> <span>বাজেট ব্যবস্থাপনা (Budgets)</span>
+          </a>
+          <a href="#lending" class="profile-menu-item" data-sheet-nav>
+            <span>🤝</span> <span>ধার প্রদান (Lending)</span>
+          </a>
+          <a href="#assistant" class="profile-menu-item" data-sheet-nav>
+            <span>🤖</span> <span>এআই ফাইন্যান্স সহকারী (AI Assistant)</span>
+          </a>
+          <a href="#backup" class="profile-menu-item" data-sheet-nav>
+            <span>💾</span> <span>ব্যাকআপ ও রিস্টোর (Backup & Restore)</span>
+          </a>
+          <a href="#settings" class="profile-menu-item" data-sheet-nav>
+            <span>⚙️</span> <span>সেটিংস ও নিরাপত্তা (Settings)</span>
+          </a>
+          <button type="button" class="profile-menu-item btn-menu-reload" id="btn-sheet-force-reload">
+            <span>🔄</span> <span>ক্যাশ পরিষ্কার ও অ্যাপ রিলোড (Force Update)</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -271,6 +392,6 @@
   </script>
 
   <!-- Main ES Module Script -->
-  <script type="module" src="./js/app.js"></script>
+  <script type="module" src="./js/app.js?v=10"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 // Service Worker for Personal Finance Manager - Smart Offline Edition
-const CACHE_NAME = 'pfm-offline-v9';
+// Version: pfm-offline-v10 (Automatic cache busting and network-first navigation)
+const CACHE_NAME = 'pfm-offline-v10';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -37,6 +38,7 @@ const ASSETS_TO_CACHE = [
   './tests/test_runner.js'
 ];
 
+// Install: Cache all core assets and activate immediately
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -45,12 +47,14 @@ self.addEventListener('install', (event) => {
   );
 });
 
+// Activate: Delete all previous caches and claim clients immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('[SW] Purging old cache:', key);
             return caches.delete(key);
           }
         })
@@ -59,18 +63,36 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Fetch: Network-First for Navigation (HTML), Stale-While-Revalidate for Assets
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests for offline caching
   if (event.request.method !== 'GET') return;
 
+  const url = new URL(event.request.url);
+
+  // 1. Navigation requests (index.html): Network-First with Cache Fallback
+  // Guarantees mobile users receive fresh updates when online, 100% functional when offline
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('index.html') || url.pathname.endsWith('/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match('./index.html') || caches.match('./');
+        })
+    );
+    return;
+  }
+
+  // 2. All other assets (CSS, JS, Icons): Stale-While-Revalidate
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        // Cache new local resources dynamically
-        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+      const fetchPromise = fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseToCache);
@@ -78,11 +100,10 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        // Return index.html fallback for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
+        // Offline and not in cache
       });
+
+      return cachedResponse || fetchPromise;
     })
   );
 });
