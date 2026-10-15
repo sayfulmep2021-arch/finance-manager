@@ -43,8 +43,8 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Finance Manager">
-  <link rel="stylesheet" href="./css/style.css?v=13">
-  <link rel="stylesheet" href="./css/mobile.css?v=13">
+  <link rel="stylesheet" href="./css/style.css?v=14">
+  <link rel="stylesheet" href="./css/mobile.css?v=14">
 </head>
 <body>
   <div class="app-container">
@@ -171,27 +171,27 @@
         <button type="button" id="btn-apply-update" class="btn-update-pill">আপডেট করুন</button>
       </div>
 
-      <!-- Mobile Fixed Bottom Navigation (English Labels per User Specification) -->
+      <!-- Mobile Fixed Bottom Navigation (Blueprint Matching Reference Image 1) -->
       <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
         <a href="#dashboard" class="bnav-item active" data-bnav="dashboard">
           <span class="bnav-icon">🏠</span>
-          <span class="bnav-label">Home</span>
+          <span class="bnav-label" data-i18n="bnavHome">হোম</span>
         </a>
-        <a href="#transactions" class="bnav-item" data-bnav="transactions">
-          <span class="bnav-icon">📑</span>
-          <span class="bnav-label">History</span>
-        </a>
-        <a href="#savings" class="bnav-item" data-bnav="savings">
-          <span class="bnav-icon">🎯</span>
-          <span class="bnav-label">Savings</span>
+        <a href="#accounts" class="bnav-item" data-bnav="accounts">
+          <span class="bnav-icon">💳</span>
+          <span class="bnav-label" data-i18n="bnavAccounts">হিসাব</span>
         </a>
         <a href="#borrowing" class="bnav-item" data-bnav="borrowing">
           <span class="bnav-icon">👥</span>
-          <span class="bnav-label">Loans</span>
+          <span class="bnav-label" data-i18n="bnavLoans">ঋণ</span>
+        </a>
+        <a href="#budgets" class="bnav-item" data-bnav="budgets">
+          <span class="bnav-icon">🎯</span>
+          <span class="bnav-label" data-i18n="bnavSavings">বাজেট</span>
         </a>
         <a href="#reports" class="bnav-item" data-bnav="reports">
           <span class="bnav-icon">📊</span>
-          <span class="bnav-label">Statistics</span>
+          <span class="bnav-label" data-i18n="bnavReports">পরিসংখ্যান</span>
         </a>
       </nav>
     </div>
@@ -261,7 +261,7 @@
             <span class="notif-card-icon">⚡</span>
             <div>
               <div class="notif-card-title">অ্যাপ সংস্করণ (PWA Version)</div>
-              <div class="notif-card-sub">v12 — নেটিভ অ্যান্ড্রয়েড এডিশন (HyperOS Optimized)</div>
+              <div class="notif-card-sub">v14 — নেটিভ অ্যান্ড্রয়েড এডিশন (Image 1 Blueprint)</div>
             </div>
           </div>
           <button type="button" class="btn btn-primary-outline btn-xs" id="btn-force-reload-cache">🔄 রিফ্রেশ</button>
@@ -402,6 +402,6 @@
   </script>
 
   <!-- Main ES Module Script -->
-  <script type="module" src="./js/app.js?v=13"></script>
+  <script type="module" src="./js/app.js?v=14"></script>
 </body>
 </html>

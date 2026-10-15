@@ -1,6 +1,6 @@
 // Service Worker for Personal Finance Manager - Smart Offline Edition
-// Version: pfm-offline-v13 (Fixed native viewport scaling, compact unified cards matching reference)
-const CACHE_NAME = 'pfm-offline-v13';
+// Version: pfm-offline-v14 (Exact blueprint clone of Image 1 reference)
+const CACHE_NAME = 'pfm-offline-v14';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

@@ -173,43 +173,9 @@ export async function renderDashboard(container) {
       </a>
     </div>
 
-    <!-- MOBILE RECENT TRANSACTIONS LIST (Unified Card matching Reference) -->
+    <!-- MOBILE RECENT TRANSACTIONS LIST (Individual Floating Cards matching Image 1) -->
     <div class="mobile-tx-list-container" id="mobile-tx-list-container">
-      <!-- Populated dynamically as unified card -->
-    </div>
-
-    <!-- SMART FINANCIAL HEALTH BANNER (Matching Reference Image Banner) -->
-    <div class="mobile-insights-banner" onclick="window.location.hash='#budgets'">
-      <div class="insights-icon-circle">🎯</div>
-      <div class="insights-content">
-        <h4 class="insights-title">মাসিক বাজেট স্বাস্থ্য: নিরাপদ (Safe Zone)</h4>
-        <p class="insights-desc">চলতি মাসে আপনার ব্যয়ের গতি স্বাভাবিক রয়েছে। সঞ্চয় লক্ষ্যমাত্রা অর্জনে এগিয়ে থাকুন।</p>
-      </div>
-    </div>
-
-    <!-- TOP FEATURES & QUICK SERVICES (Matching Reference Image Top Features Grid) -->
-    <div class="mobile-section-header" style="margin-top: 4px;">
-      <h3 class="mobile-section-title">⚡ প্রয়োজনীয় টুলস (Top Features)</h3>
-      <a href="#settings" class="mobile-view-all-link">সব সেটিংস</a>
-    </div>
-
-    <div class="mobile-tools-grid">
-      <a href="#reports" class="mobile-tool-item">
-        <div class="mobile-tool-icon">📊</div>
-        <span class="mobile-tool-label">রিপোর্ট</span>
-      </a>
-      <a href="#budgets" class="mobile-tool-item">
-        <div class="mobile-tool-icon">🎯</div>
-        <span class="mobile-tool-label">বাজেট</span>
-      </a>
-      <a href="#borrowing" class="mobile-tool-item">
-        <div class="mobile-tool-icon">👥</div>
-        <span class="mobile-tool-label">ধার-দেনা</span>
-      </a>
-      <a href="#assistant" class="mobile-tool-item">
-        <div class="mobile-tool-icon">🤖</div>
-        <span class="mobile-tool-label">সহকারী</span>
-      </a>
+      <!-- Populated dynamically as individual floating cards -->
     </div>
 
     <!-- DESKTOP KPI GRID (Retained 100% for screens > 768px) -->
@@ -489,17 +455,15 @@ function renderRecentTransactionsView() {
     return true;
   });
 
-  // 1. Render Mobile Unified Card matching the Reference Screenshot
+  // 1. Render Mobile Floating Cards matching Image 1 Blueprint
   if (mobContainer) {
-    let rowsHtml = '';
+    let itemsHtml = '';
     const isExpense = activeMobileTab === 'expense';
-    const targetHash = isExpense ? '#expenses' : '#income';
-    const addLabel = isExpense ? '➕ নতুন ব্যয় যোগ করুন' : '➕ নতুন আয় যোগ করুন';
 
     if (filteredTx.length === 0) {
       if (isExpense) {
-        rowsHtml = `
-          <div class="mobile-unified-row" onclick="window.location.hash='#expenses'">
+        itemsHtml = `
+          <div class="mobile-tx-item" onclick="window.location.hash='#expenses'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #fff7ed; color: #ea580c; border: 1px solid #ffedd5;">☕</div>
               <div class="mobile-tx-details">
@@ -507,9 +471,9 @@ function renderRecentTransactionsView() {
                 <span class="mobile-tx-sub">আজ</span>
               </div>
             </div>
-            <div class="mobile-tx-amount">৳১৬০</div>
+            <div class="mobile-tx-amount">৳ 160</div>
           </div>
-          <div class="mobile-unified-row" onclick="window.location.hash='#expenses'">
+          <div class="mobile-tx-item" onclick="window.location.hash='#expenses'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #f5f3ff; color: #7c3aed; border: 1px solid #ede9fe;">🐟</div>
               <div class="mobile-tx-details">
@@ -517,9 +481,9 @@ function renderRecentTransactionsView() {
                 <span class="mobile-tx-sub">আজ</span>
               </div>
             </div>
-            <div class="mobile-tx-amount">৳১,৫০০</div>
+            <div class="mobile-tx-amount">৳ 1,500</div>
           </div>
-          <div class="mobile-unified-row" onclick="window.location.hash='#expenses'">
+          <div class="mobile-tx-item" onclick="window.location.hash='#expenses'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #fdf2f8; color: #db2777; border: 1px solid #fce7f3;">🧴</div>
               <div class="mobile-tx-details">
@@ -527,9 +491,9 @@ function renderRecentTransactionsView() {
                 <span class="mobile-tx-sub">গতকাল</span>
               </div>
             </div>
-            <div class="mobile-tx-amount">৳৪০</div>
+            <div class="mobile-tx-amount">৳ 40</div>
           </div>
-          <div class="mobile-unified-row" onclick="window.location.hash='#expenses'">
+          <div class="mobile-tx-item" onclick="window.location.hash='#expenses'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fee2e2;">📷</div>
               <div class="mobile-tx-details">
@@ -537,12 +501,12 @@ function renderRecentTransactionsView() {
                 <span class="mobile-tx-sub">গতকাল</span>
               </div>
             </div>
-            <div class="mobile-tx-amount">৳২৫০</div>
+            <div class="mobile-tx-amount">৳ 250</div>
           </div>
         `;
       } else {
-        rowsHtml = `
-          <div class="mobile-unified-row" onclick="window.location.hash='#income'">
+        itemsHtml = `
+          <div class="mobile-tx-item" onclick="window.location.hash='#income'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7;">💰</div>
               <div class="mobile-tx-details">
@@ -550,9 +514,9 @@ function renderRecentTransactionsView() {
                 <span class="mobile-tx-sub">আজ</span>
               </div>
             </div>
-            <div class="mobile-tx-amount text-success">+৳৭০,০০০</div>
+            <div class="mobile-tx-amount text-success">+৳ 70,000</div>
           </div>
-          <div class="mobile-unified-row" onclick="window.location.hash='#income'">
+          <div class="mobile-tx-item" onclick="window.location.hash='#income'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: #eff6ff; color: #0284c7; border: 1px solid #dbeafe;">💻</div>
               <div class="mobile-tx-details">
@@ -560,7 +524,7 @@ function renderRecentTransactionsView() {
                 <span class="mobile-tx-sub">গতকাল</span>
               </div>
             </div>
-            <div class="mobile-tx-amount text-success">+৳১২,৫০০</div>
+            <div class="mobile-tx-amount text-success">+৳ 12,500</div>
           </div>
         `;
       }
@@ -573,8 +537,8 @@ function renderRecentTransactionsView() {
         const isIncome = tx.type === 'income';
         const relDate = formatRelativeDate(tx.date);
 
-        rowsHtml += `
-          <div class="mobile-unified-row" onclick="window.location.hash='#transactions'">
+        itemsHtml += `
+          <div class="mobile-tx-item" onclick="window.location.hash='#transactions'">
             <div class="mobile-tx-left">
               <div class="mobile-tx-icon-badge" style="background-color: ${style.bg}; color: ${style.text}; border: 1px solid ${style.border};">
                 ${catIcon}
@@ -592,21 +556,7 @@ function renderRecentTransactionsView() {
       });
     }
 
-    mobContainer.innerHTML = `
-      <div class="mobile-unified-card">
-        <div class="mobile-unified-list">
-          ${rowsHtml}
-        </div>
-        <div class="mobile-unified-card-footer">
-          <button type="button" class="mobile-card-footer-btn" onclick="window.location.hash='${targetHash}'">
-            <span>${addLabel}</span>
-          </button>
-          <button type="button" class="mobile-card-footer-btn" onclick="window.location.hash='#transactions'">
-            <span>📑 সব লেনদেন দেখুন</span>
-          </button>
-        </div>
-      </div>
-    `;
+    mobContainer.innerHTML = itemsHtml;
   }
 
   // 2. Render Desktop Table View (Screens > 768px)
